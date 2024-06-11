@@ -1,2 +1,3 @@
 # ABAP-STUFF
-Code bits and Knowledge
+
+Repositório contendo aplicações, conhecimento e lógicas ABAP
