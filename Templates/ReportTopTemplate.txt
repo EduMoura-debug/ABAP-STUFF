@@ -1,0 +1,33 @@
+***********************************************************************
+*                                                                      *
+*         ********************************************                 *
+*         *                                          *                 *
+*         *                EMPRESA                   *                 *
+*         *                                          *                 *
+*         ********************************************                 *
+*                                                                      *
+************************************************************************
+* NOME DO PROGRAMA    :  ZEDU_REPORT_PEDIDO                            *
+* TRANSAÇÃO           :                                                *
+* TÍTULO DO PROGRAMA  : Report de pedidos                              *
+* DESCRIÇÃO           : Gerar relatório de pedido de itens             *
+* PROGRAMADOR         : Eduardo Freitas Moura                          *
+* DATA                : 09.02.2022                                     *
+*                                                                      *
+*----------------------------------------------------------------------*
+* HISTÓRICO DE MUDANÇAS:                                               *
+* MUD |DATA       |AUTOR      |REQUEST #    |DESCRIÇÃO                 *
+* 001 |09.02.2022 |EFREITAS   |XXXXXXXXXX   |Organização do código     *
+************************************************************************
+
+
+
+************************************************************************
+* NOME DO PROGRAMA    : ZEDU_DEMO_ITAB                                 *
+* TRANSAÇÃO           :                                                *
+* TÍTULO DO PROGRAMA  : Relatório de Contrapartida Fornecedor          *
+* DESCRIÇÃO           : Mostrar a diferença entre os tipos de tabelas  *
+*                       internas (Standard, Sorted e Hashed)           *
+* PROGRAMADOR         : Eduardo Freitas Moura (EFREITAS)               *
+* DATA                : 01.01.2999                                     *
+************************************************************************
