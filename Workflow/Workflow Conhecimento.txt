@@ -9,7 +9,8 @@ Programa: RHMOVE30
 
 SAP ALL para WF-BATCH e SAP_WFRT 
 
-Autorização para SWO_ASYNC permite seguir caminho do anexo
+Autorização para SWO_ASYNC 
+--> Permite seguir caminho do anexo para visão de um pedido de compra por exemplo.
 
  
 ----------------------------------------------------
