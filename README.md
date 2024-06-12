@@ -363,7 +363,7 @@ Pode ser feito da seguinte maneira (como é feito em um padrão):
 IF 1 = 2. MESSAGE i123(abc) ... . ENDIF.
 ```
 
-or 
+ou
 
 ```abap
 MESSAGE i123(abc) ... INTO sy-msgli. "depois use os campos sy-msg* para passar os atibutos da messagem
@@ -594,7 +594,7 @@ Apenas programas bem projetados podem ser facilmente testados. Para facilitar o 
 
 ## S/4 Modelo de Programação
 
-todo
+*A fazer*
 
 ## BOPF
 

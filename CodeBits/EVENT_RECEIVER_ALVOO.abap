@@ -21,5 +21,6 @@ ENDCLASS.
 
 DATA: event_receiver TYPE REF TO cl_event_receiver.
 
+* Antes do display
 CREATE OBJECT event_receiver.
 SET HANDLER event_receiver->handle_double_click FOR go_superior.

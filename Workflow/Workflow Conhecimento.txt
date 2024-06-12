@@ -12,6 +12,8 @@ SAP ALL para WF-BATCH e SAP_WFRT
 Autorização para SWO_ASYNC 
 --> Permite seguir caminho do anexo para visão de um pedido de compra por exemplo.
 
+rmps_set_substitute
+--> Dar um substituto a um usuário. Todos os conteúdos da SBWP serão passados.
  
 ----------------------------------------------------
 TRANSACTIONS:
