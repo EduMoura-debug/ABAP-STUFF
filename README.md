@@ -74,10 +74,10 @@ Traduzido do original https://github.com/ilyakaznacheev/abap-best-practice/blob/
   - [Lembre-se dos testes ao projetar a arquitetura](#manter-testes-em-mente-ao-projetar-arquitetura)
 - [Modelo de programação S/4](#s4-modelo-de-programação)
 - [BOPF](#bopf)
-  - [Evite acesso direto aos dados do BOPF](#evitar-acesso-direto-aos-dados-bopf)
-- [Serviços de dados principais](#core-data-services)
-  - [Evite lógica de negócios em visualizações CDS](#avoid-business-logic-in-cds-views)
-  - [Evite acesso direto a tabelas de banco de dados e funções de tabela na hierarquia de visualização CDS da camada superior](#evitar-acesso-direto-a-tabelas-de-banco-de-dados-e-funções-de-tabela-na-camada-superior-cds-view-hierarquia)
+  - [Evite acesso direto aos dados do BOPF](#evite-acesso-direto-aos-dados-do-BOPF)
+- [Serviços de dados principais](#serviços-de-dados-principais)
+  - [Evite lógica de negócios em visualizações CDS](#evite-lógica-de-negócios-em-visualizações-cds)
+  - [Evite acesso direto a tabelas de banco de dados e funções de tabela na hierarquia de visualização CDS da camada superior](#evite-acesso-direto-a-tabelas-de-banco-de-dados-e-funções-de-tabela-na-hierarquia-de-visualização-cds-da-camada-superior)
 
 
 ## Estilo e Diretrizes
@@ -150,7 +150,7 @@ Crie variáveis, métodos e atributos com o menor escopo possível. Quanto maior
 
 Evite constantes com código rígido ou variáveis sem nome.
 
-Em vez disso, mova-os em variáveis significativas ou constantes. Observação, que apenas mover texto literal com o mesmo nome não é suficiente (`ABC123` → `lc_abc123`), dê uma descrição adequada (`ABC123` → ` lc_storage_class`)
+Em vez disso, mova-os em variáveis significativas ou constantes. Observação, que apenas mover texto literal com o mesmo nome não é suficiente (`ABC123` → `lc_abc123`), dê uma descrição adequada (`ABC123` → `lc_storage_class`)
 
 Ruim:
 ```abap
@@ -180,7 +180,7 @@ lo_doc_processor->change_document(
 
 ### Evite Deep Nest
 
-Não escreva loops, casos e outras estruturas de controle. Em vez de aninhando a saída da estrutura de controle com ifs, cheques e retornos.
+Não escreva loops, casos e outras estruturas de controle. Em vez disso, defina a saída da estrutura de controle com IFs, CHECKs e retornos.
 
 Ruim:
 ```abap
@@ -600,15 +600,15 @@ todo
 
 Como usar o Business Object Processing Framework da maneira correta
 
-### Evite o acesso direto aos dados do BOPF
+### Evite acesso direto aos dados do BOPF
 
 Não execute operações DB diretas em tabelas BOPF. O BOPF encapsula diferentes operações, tais como buffering, validações de dados, cálculos de dados etc. que serão desencadeados apenas na chamada da API do BOPФ. O acesso direto pode causar erros no processo de trabalho do BOPF.
 
-## Serviços de dados básicos
+## Serviços de dados principais
 
 Como não se perder na hierarquia CDS
 
-### Evite a lógica de negócios nas Visualizações do CDS
+### Evite lógica de negócios em visualizações CDS
 
 Tente usar o CDS Views apenas para modelagem de dados. 
 
@@ -616,7 +616,7 @@ Se você adicionar algumas condições ou regras relacionadas a negócios, elas 
 
 Use CDS Views apenas como modelos de dados e separar a lógica de negócios correspondente em programas ABAP ou objetos de negócio.
 
-### Evite o acesso direto a tabelas de banco de dados e funções de tabelas no CDS de camada superior Ver hierarquia
+### Evite acesso direto a tabelas de banco de dados e funções de tabela na hierarquia de visualização CDS da camada superior
 
 Para cada tabela de banco de dados, deve ser criada uma visualização de base de dados ou uma função de tabela correspondente à Visualização Básica do CDS. Essas vistas descrevem nomes significativos para campos de tabelas de banco de dados, adicionam associações e anotações específicas de dados.
 
