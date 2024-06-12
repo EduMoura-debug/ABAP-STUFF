@@ -7,8 +7,8 @@ v_campo = 'FRGC'.
 
 DO 7 TIMES.
 
-  CONCATENATE v_campo(4) index INTO v_campo.  //Dinamicamente monta o nome do campo
-  ASSIGN COMPONENT v_campo OF STRUCTURE s_t16fs //Retorna o valor para o Field-Symbol
+  CONCATENATE v_campo(4) index INTO v_campo.  "Dinamicamente monta o nome do campo
+  ASSIGN COMPONENT v_campo OF STRUCTURE s_t16fs "Retorna o valor para o Field-Symbol
                                    TO <fs_code>.
 
   IF <fs_code> IS NOT INITIAL.

@@ -30,7 +30,7 @@ METHOD download_layout. "Baixar Layout de um Modelo Excel
       EXPORTING
 *       window_title              =
         default_extension         = 'xlsx'
-        default_file_name         = 'b2b_example.xlsx'
+        default_file_name         = 'example.xlsx'
 *       with_encoding             =
         file_filter               = 'XLSX-Files (*.XLSX)'
         initial_directory         = 'C:\'
@@ -58,10 +58,10 @@ METHOD download_layout. "Baixar Layout de um Modelo Excel
 
       APPEND INITIAL LINE TO lt_layout ASSIGNING FIELD-SYMBOL(<fs_layout>).
       <fs_layout>-pedido       =  'PEDIDO'.
-      <fs_layout>-loja         =  'LOJA SAP'.
-      <fs_layout>-cod_cliente  =  'COD CLIENTE SAP'.
-      <fs_layout>-data_pedido  =  'DATA DO PEDIDO'.
-      <fs_layout>-hora_pedido  =  'HORA DO PEDIDO'.
+      <fs_layout>-loja         =  'LOJA'.
+      <fs_layout>-cod_cliente  =  'COD CLIENTE'.
+      <fs_layout>-data_pedido  =  'DATA'.
+      <fs_layout>-hora_pedido  =  'HORA'.
       <fs_layout>-material     =  'MATERIAL'.
       <fs_layout>-qtd          =  'QUANTIDADE'.
       <fs_layout>-und          =  'UNIDADE DE MEDIDA'.

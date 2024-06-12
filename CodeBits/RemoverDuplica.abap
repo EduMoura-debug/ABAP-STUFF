@@ -1,3 +1,5 @@
+
+
 READ TABLE gt_dif_cliente_sav TRANSPORTING NO FIELDS WITH KEY chitem = gs_dif_cliente-chave_item.
 IF sy-subrc NE 0.
 	APPEND gs_dif_cliente TO gt_dif_cliente_sav.
