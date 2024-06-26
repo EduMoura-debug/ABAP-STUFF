@@ -4,7 +4,7 @@ IMPORTANTE:
 
 SCC1 para transporte customizing de ativação de eventos
 
-Tarefas de diálogo precisam passar 'Tarefa Geral' para Request Customizing
+Tarefas de etapas de diálogo precisam passar 'Tarefa Geral' para Request Customizing
 Programa: RHMOVE30
 
 SAP ALL para WF-BATCH e SAP_WFRT 
@@ -15,7 +15,7 @@ Autorização para SWO_ASYNC
 rmps_set_substitute
 --> Dar um substituto a um usuário. Todos os conteúdos da SBWP serão passados.
  
-Loop Infinito + SM50 para debugar o método em background  
+Loop Infinito + SM50 para debugar o método que acontece em background  
 
 ----------------------------------------------------
 TRANSACTIONS:
