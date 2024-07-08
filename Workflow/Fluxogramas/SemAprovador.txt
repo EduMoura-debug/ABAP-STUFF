@@ -1,0 +1,44 @@
+https://app.code2flow.com/
+
+"Aprovação não chegou 
+para o usuário";
+Procurar Log;
+  //Síntese ou SWIA
+if(Achou Log?){
+  if(Erro no Log?){
+    //Causas variadas, porém deve ser evidente
+    Analisar erro;
+  }else{  
+  //Em paralelo, notar se outro usuário recebeu essa etapa 
+  Encontrar etapa de decisão do usuário; 
+  switch(Como é definido 
+  o responsável?){
+    Container =>
+    //Checar containers e código dentro do método da TS
+    Procurar etapa/método de 
+    estorno desse campo;
+    //Regra associada com uma FM
+    Regra => Pela regra, procurar 
+    seleção pelo responsável;
+    UserID => 
+    Checar permissões do usuário;
+  }
+  Entender o porquê de não 
+  ter chegado para o 
+  usuário analisado;
+} 
+}
+else{
+//Transação SWEL
+Checar se o Workflow é 
+realmente disparado;
+//Transação SWU3
+if(Ambiente desconfigurado){
+  Notificar 
+  funcional e BASIS;
+}else{
+Processo do 
+usuário errado; 
+}
+  
+}

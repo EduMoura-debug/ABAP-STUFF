@@ -1,0 +1,42 @@
+"Erro no Workflow";
+voltar:
+Procurar Log;
+  //Síntese ou SWIA
+if(Achou Log?){
+    if(Erro no Log?){
+    //Status Incorreto (ERROR)
+    Selecionar Etapa Incorreta;
+    //Abas no meio da tela
+    match Analisar Erro{
+      //Documento bloqueado;
+      //Erro na codificação;
+      //(Bom pesquisar)
+      Hist.Etapa => Notar se houveram 
+      exceções de sistema;
+      Msg. => Se houve alguma exceção 
+      no método da tarefa;
+      //Mensagem interna do
+      //método em background
+      Container => Procurar estrutura retorno;
+    }
+    }
+    else{
+      Entender o que "erro"
+      significa;
+    }
+}
+else{
+//Transação SWEL
+if(Workflow disparado?){
+  //Dados para busca pelo
+  // log incorretos
+  Notificar 
+  funcional;
+  goto voltar;
+}else{
+  //Eventos, condições e validações
+Entender o processo 
+de disparo de eventos;
+}
+  
+}
