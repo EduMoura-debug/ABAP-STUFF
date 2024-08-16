@@ -5,7 +5,7 @@ DATA: lv_controle_debug TYPE tvarvc-low,
 
 CLEAR: lv_controle_debug, lv_controle_loop.
 "Criar uma TVARV para habilitar ou desabilitar o debug
-SELECT low
+SELECT SINGLE low
     FROM tvarvc
     INTO lv_controle_debug
     WHERE name EQ 'HABILITA_DEBUG_WF'.
