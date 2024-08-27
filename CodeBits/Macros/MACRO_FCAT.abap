@@ -14,7 +14,7 @@ DEFINE m_fieldcat.
     clear wa_fcat.
 END-OF-DEFINITION.
 
-  m_fieldcat '' 'CHAVE' 'T_SAIDA' 'Chave'          12 'X' ''  12.
+  m_fieldcat '' 'CHAVE' 'T_SAIDA' 'Chave'          'X' ''  12.
   m_fieldcat '' 'VALOR' 'T_SAIDA' 'Valor'          ''  ''  02.
   m_fieldcat '' 'TEXTO' 'T_SAIDA' 'Texto Editável' ''  'X' 250.
 
