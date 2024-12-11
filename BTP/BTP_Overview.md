@@ -1,5 +1,5 @@
 # Pilares do BTP 
-## Desevvolivmento de APlicação
+## Desevvolivmento de Aplicação
 
 O SAP BTP concentra-se em capacitar os desenvolvedores para criar, implantar e gerenciar aplicativos com eficiência. Oferece várias ferramentas e serviços de desenvolvimento para suportar diferentes linguagens de programação e abordagens de desenvolvimento. Também oferece suporte ao desenvolvimento de low-code, permitindo que usuários corporativos criem aplicativos sem amplo conhecimento de codificação.
 
