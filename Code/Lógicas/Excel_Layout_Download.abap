@@ -1,6 +1,17 @@
-METHOD download_layout. "Baixar Layout de um Modelo Excel
+initialization.
 
-    DATA: BEGIN OF ls_layout,
+sscrfields-functxt_01 = 'Download Layout Excel'.
+
+at selection-screen.
+
+  case sscrfields-ucomm.
+      when'FC01'.
+      perform zf_download_layout.
+  endcase.
+
+METHOD download_layout. "Baixar Layout de um Modelo Excel
+  
+DATA: BEGIN OF ls_layout,
             pedido      TYPE c LENGTH 15,
             loja        TYPE c LENGTH 15,
             cod_cliente TYPE c LENGTH 15,

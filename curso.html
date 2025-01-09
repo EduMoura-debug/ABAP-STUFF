@@ -1,0 +1,53 @@
+<DOCTYPE! html>
+
+<header>
+
+<h1> Meu perfil personalizado </h1>
+
+</header>
+
+<script>
+
+    function Click(){
+
+        if (typeof(Storage) !== "undefined") {
+
+            //localStorage.setItem("nome", "Eduardo");
+            var novo_nome = document.getElementById("ernam").innerHTML;
+            var local_nome = localStorage.getItem("nome");
+
+            if (novo_nome !== local_nome){
+                
+            }
+        } 
+    }
+
+</script>
+
+<main>
+    <body>
+
+    <br>
+    <form>
+        <label for="ernam">Digite seu nome:</label><br>
+        <input type="text" id="ernam" name="ernam"><br>
+        <label for="idade">Sua Idade:</label><br>
+        <input type="number" id="idade" name="idade"><br>
+        <label for="corfav">Cor Favorita:</label><br>
+        <input type="color" id="corfav" name="corfav" value = '#ffffff'><br>
+    </form>
+    <br>
+
+    <button onclick="Click()">Click me</button>
+    <br><br>
+
+    <p id="par1"></p> 
+
+    </body>
+</main>   
+
+<footer>
+
+</footer>
+
+</DOCTYPE>    
