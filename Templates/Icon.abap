@@ -1,4 +1,6 @@
-                   
+
+*ICON TABLE - SE16N
+
       Name                                     Quickinfo
 ICON_2 ICON_DUMMY                     '@00@'."  PlaceholderIcon
 ICON_2 ICON_CHECKED                   '@01@'."  Checked; OK

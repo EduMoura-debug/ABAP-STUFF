@@ -37,6 +37,10 @@ SWELS, SWEL – Rastreio de Eventos
 
 SWUE – Disparo de Eventos
 
+SWUS - Teste de Workflow
+
+SWUS_WITH_REFERENCE - Iniciar Workflow com Referencia
+
 SWI5 – Inbox do Usuário
 
 SWU_OBUF – Sincronização do Buffer 
@@ -49,7 +53,13 @@ SWO1 – Builder Business Object (BOR)
 
 SWLO – Exibir workitems do objeto Workflow 
 
-SWI2_FREQ - Análise do Workitem 
+SWWL - Eliminar Workflow 
+
+SWU2 - RFCs presas
+
+SMQA, SM58 - Erros de RFC
+
+SWI2_FREQ, SWI2_DIAG - Análise do Workitem 
 
 SWIA – Processamento Workflow como Admin 
 

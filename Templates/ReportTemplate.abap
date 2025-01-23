@@ -6,7 +6,7 @@
 * PROGRAMADOR         :                                                *
 * DATA                :                                                *
 ************************************************************************
-REPORT z_report_exp.
+REPORT z_report_exp. "Alterar pelo nome do programa
 
 *-------------------TABELAS------------------*
 
@@ -48,23 +48,10 @@ END-OF-DEFINITION.
 *----------------TELA DE SELEÇÃO-------------*
 SELECTION-SCREEN BEGIN OF BLOCK b01 WITH FRAME TITLE TEXT-001.
 
-  SELECT-OPTIONS: s_nump  FOR ekko-ebeln,
-                  s_forn  FOR ekko-lifnr.
+*SELECT-OPTIONS: s_nump  FOR ekko-ebeln,
+*                s_forn  FOR ekko-lifnr.
 
 SELECTION-SCREEN END OF BLOCK b01.
-
-*SELECTION-SCREEN BEGIN OF BLOCK b02 WITH FRAME TITLE TEXT-002.
-*
-*  PARAMETERS:
-*    p_ebeln RADIOBUTTON GROUP grp1,
-*    p_matnr RADIOBUTTON GROUP grp1,
-*    p_matkl RADIOBUTTON GROUP grp1.
-*
-*  SELECTION-SCREEN SKIP 1.
-*
-*  PARAMETERS: p_varian LIKE ltdx-variant MODIF ID id1.
-*
-*SELECTION-SCREEN END OF BLOCK b02.
 
 START-OF-SELECTION.
 
@@ -98,14 +85,14 @@ ENDFORM.
 *&---------------------------------------------------------------------*
 FORM zf_display_alv .
   
-    DATA vl_repid LIKE sy-repid.
+  DATA vl_repid LIKE sy-repid.
     
-    vl_repid = sy-repid.
+  vl_repid = sy-repid.
 
-ls_layout-colwidth_optimize = 'X'.
+  ls_layout-colwidth_optimize = 'X'.
   ls_layout-zebra             = 'X'.
 
-  m_fieldcat '' '' '' '' '' ''  1.
+  m_fieldcat '' '' '' '' '' ''  10.
 
   CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
     EXPORTING
