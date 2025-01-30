@@ -1,4 +1,0 @@
-
-Função para burlar autorização de usuário: 
-
-C14Z_TRANSACTION_CALL
