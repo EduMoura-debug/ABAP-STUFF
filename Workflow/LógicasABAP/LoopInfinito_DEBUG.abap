@@ -18,3 +18,20 @@ IF lv_controle_debug EQ abap_true.
         ENDIF.
     ENDDO.
 ENDIF.
+
+
+***** Outro *****
+
+DATA: lc_ativo LIKE ztbsd_wf_debug-ativo.
+
+SELECT SINGLE ativo
+  INTO lc_ativo
+FROM ztb_wf_debug
+WHERE id_wf = 'WF_ID'        "WS9XXXXXXX
+  AND evento = 'METHOD_NAME' "Método passado pela task
+  AND task = 'TASK_ID'.      "TS9XXXXXXX
+IF lc_ativo = abap_true.
+  DATA: a.
+  WHILE a IS INITIAL.
+  ENDWHILE.
+ENDIF.
