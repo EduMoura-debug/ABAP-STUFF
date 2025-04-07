@@ -1,4 +1,4 @@
-## ABAP RAP
+## ABAP RAP Overview
 
 O ABAP RAP (ABAP RESTful Application Programming Model) é um modelo de programação revolucionária desenvolvido pela SAP para simplificar e acelerar o desenvolvimento de aplicativos empresariais.
 
@@ -12,10 +12,44 @@ Além disso, o ABAP RAP promove a reutilização de código e componentes, permi
 
 O ABAP RAP representa uma mudança significativa no desenvolvimento de aplicativos SAP, permitindo que as empresas aproveitem as mais recentes práticas de desenvolvimento e tecnologias sem comprometer a integridade e a estabilidade dos sistemas existentes. Com sua abordagem orientada a serviços e sua capacidade de simplificar o processo de desenvolvimento, o ABAP RAP capacita as empresas a criar aplicativos SAP de última geração que atendam às demandas cada vez maiores e mais complexas do mundo dos negócios.
 
-## Notas 
+## Conceito 
 
+O ABAP RAP é a nova forma de desenvolver no ABAP. O RAP inclui todos os steps e elementos de Desenvolvimento:
 
+- Data Model
+    Criação, Leitura, Modificação, Deleção
+-  Business Logic
+    Cálculos, Validações
+- Transactional Behavior
+    Comportamentos, Numeração, Determinação
+- Technical Interface
+    Tipicamente o ODATA
 
+Independentemente da Tecnologia, o RAP descreve como uma Aplicação deve ser Construída, Testada e Solucionado os Problemas baseada em uma arquitetura particular.
+
+O RAP fornece certas tecnologias, conceitos, artefatos (Objetos ABAP) e ferramentas. A definição do fluxo de desenvolvimento trás estes componentes juntos.
+
+## Lista de DLs
+
+### DDL -> Data Definition Language
+
+Utilizado nas CDSs para adefinir a semântica dos modelos de aplicação. A CDS será usada para expor os dados no ODATA Service
+
+### DDLA -> Data Definition Language Annotations
+
+Linguagem que define as anotações que servem para definir caractéristicas aos objetos definidos no DDL
+
+### DLC -> Data Control Language
+
+Linguagem que define os dados de Controle
+
+### BDL -> Behaviour Definition Language
+
+Linguagem utilizada nos Behaviors que controla as ações do APP 
+
+### SDL -> Service Definition Language
+
+Linguagem utilizada nos serviços que compõem o ODATA
 
 ## Links Utéis 
 

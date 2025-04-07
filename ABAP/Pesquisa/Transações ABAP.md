@@ -81,6 +81,13 @@ Usada para verificar alterações em objetos de configuração e tabelas.
 
 Permite baixar e aplicar notas de correção da SAP ao sistema.
 
+### 21. ASNT - Pesquisa Notas & Automatizada Ferramente Determinação p/tx.fonte clnt
+
+
 ## Função para burlar autorização de usuário: 
 
 C14Z_TRANSACTION_CALL
+
+## Para aqueles que desejam procurar algum termo ou código de forma rápida
+
+RS_ABAP_SOURCE_SCAN
