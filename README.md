@@ -60,7 +60,7 @@ Traduzido do original https://github.com/ilyakaznacheev/abap-best-practice/blob/
     - [Verifique sy-subrc após operações de banco de dados](#check-sy-subrc-after-db-operações)
     - [Leia apenas os campos necessários](#leia-apenas-os-campos-necessários)
     - [Verifique o vazio da tabela FAE](#verifique-vazio-tabela-fae)
-- [Perfromance](#perfromance)
+- [Performance](#performance)
     - [Não execute SELECT em loops](#não-execute-select-em-loops)
     - [Prefira JOIN a FAE e RANGE](#prefira-join-a-fae-e-range)
     - [Use FAE no HANA](#use-fae-on-hana)
@@ -530,7 +530,7 @@ Caso contrário, `SELECT` devolverá **cada entrada** que a tabela de banco de d
 
 Ou seja, se a sua tabela de banco de dados contém entradas de 1K e a sua cláusula `WHERE` corta o número para 10, se a tabela na FAE estiver vazia, a selecção irá obter entradas 1K.
 
-## Desempenho
+## Performance
 
 Use estas regras para evitar problemas de desempenho
 
