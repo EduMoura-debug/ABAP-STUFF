@@ -1,6 +1,6 @@
 # CDS Overview
 
-## CDS Model
+## 1 - CDS Model
 
 Os modelos de CDS compreendem as definições de várias tipos de entidades CDS, como visualizações de CDS e entidades abstratas de CDS
 
@@ -30,7 +30,7 @@ desempenho geral de ativação.
 • Isso implica que você não pode usar visualizações transitórias como fontes de dados para outras visualizações CDS, nem pode selecionar em seu código ABAP.
 • Você aprenderá sobre o uso de visualizações transitórias no contexto da implementação de consultas analíticas
 
-## Sintaxe
+## 2 - Sintaxe
 
 As visualizações de CDS definem instruções de seleção, que são aumentadas com informações adicionais de metadados.
 
@@ -169,7 +169,7 @@ Informações da sessão de tempo de execução da CDS. Funciona como o "sy" do 
 *$session.user_date*
 *$session.user_timezone*
 
-## Seleções e Busca de dados
+## 3 - Seleções e Busca de dados
 
 ### Select Distinct
 
@@ -442,12 +442,44 @@ Administração de buffers pode implicar em uma sobrecarga significativa e impac
 
 A definição e aplicação do buffer estará sempre alinhada com as seleções de dados reais. Por um lado, buffers podem restringir a evolução futura de uma visão CDS. Por outro, é preciso entender que nem todas as seleções podem ser executadas em servidor ABAP. 
 
-## Associations
+## 4 - Associations
 
 ### Define Associations
 
+As definições de associação descrevem as relações das respectivas fontes de definição com seus alvos associados no nível do registro. Funcionam como se fosse um JOIN.
 
+**Associações buscam dados de outras CDSs ou tabelas**.
 
+Em princípio, um único registro de dados de uma visualização CDS de origem pode estar relacionado a qualquer número de registros de dados de seu destino de associação, dependendo do especificado sob a condição da associação.
+
+Vice-versa, pode haver números diferentes de registros de dados de origem para um determinado registro de destino.
+
+O número possível de registros de dados correspondentes especifica a cardinalidade de uma associação.
+
+Existem duas alternativas para especificar a cardinalidade de uma associação:
+
+- Uma especificação de cardinalidade entre colchetes **[...]** descreve pelos limites inferiores e superiores capturados o número mínimo e máximo de registros de dados do alvo de associação que estão relacionados a um único registro de origem.
+
+- Uma especificação de cardinalidade usando os elementos de sintaxe *[OF [EXACT] ONE/MANY] TO [EXACT] ONE/MANY* permite não apenas capturar a cardinalidade alvo, mas também a cardinalidade de origem.
+
+| Cardinality         | Records of Association Source |                           | Records of Association Target |                           |
+|---------------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
+|                     | **Minimum**                   | **Maximum**               | **Minimum**                   | **Maximum**               |
+| [1]                 | 0                             | Unlimited                 | 1                             | 1                         |
+| [0..1]              | 0                             | Unlimited                 | 0                             | 1                         |
+| [1..1]              | 0                             | Unlimited                 | 1                             | 1                         |
+| [0..*]              | 0                             | Unlimited                 | 0                             | Unlimited                 |
+| [1..*]              | 0                             | Unlimited                 | 1                             | Unlimited                 |
+| TO ONE              | 0                             | Unlimited                 | 0                             | 1                         |
+| TO EXACT ONE        | 0                             | Unlimited                 | 1                             | 1                         |
+| TO MANY             | 0                             | Unlimited                 | 0                             | Unlimited                 |
+| OF ONE TO ONE       | 0                             | 1                         | 0                             | 1                         |
+| OF EXACT ONE TO ONE | 1                             | 1                         | 0                             | 1                         |
+| OF EXACT ONE TO EXACT ONE | 1                       | 1                         | 1                             | 1                         |
+| OF MANY TO MANY     | 0                             | Unlimited                 | 0                             | Unlimited                 |
+| OF MANY TO ONE      | 0                             | Unlimited                 | 0                             | 1                         |
+| OF MANY TO EXACT ONE| 0                             | Unlimited                 | 1                             | 1                         |
+| Not specified (default logic) | 0                         | Unlimited                 | 0                             | 1                     |
 ## Boas Práticas
 
 ### Evite lógica de negócios em visualizações CDS
