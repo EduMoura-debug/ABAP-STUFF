@@ -448,7 +448,7 @@ A definição e aplicação do buffer estará sempre alinhada com as seleções 
 
 As definições de associação descrevem as relações das respectivas fontes de definição com seus alvos associados no nível do registro. Funcionam como se fosse um JOIN.
 
-**Associações buscam dados de outras CDSs ou tabelas**.
+**Associações buscam dados de outras CDSs ou tabelas**. Podem ser alvos de associação: CDS views; CDS table functions; CDS abstract entities; Database Tables.
 
 Em princípio, um único registro de dados de uma visualização CDS de origem pode estar relacionado a qualquer número de registros de dados de seu destino de associação, dependendo do especificado sob a condição da associação.
 
@@ -462,7 +462,7 @@ Existem duas alternativas para especificar a cardinalidade de uma associação:
 
 - Uma especificação de cardinalidade usando os elementos de sintaxe *[OF [EXACT] ONE/MANY] TO [EXACT] ONE/MANY* permite não apenas capturar a cardinalidade alvo, mas também a cardinalidade de origem.
 
-| Cardinality         | Records of Association Source                             | Records of Association Target                             |
+| Cardinality         | Records of Association Source |                           | Records of Association Target |                           |
 |---------------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
 |                     | **Minimum**                   | **Maximum**               | **Minimum**                   | **Maximum**               |
 | [1]                 | 0                             | Unlimited                 | 1                             | 1                         |
@@ -480,6 +480,226 @@ Existem duas alternativas para especificar a cardinalidade de uma associação:
 | OF MANY TO ONE      | 0                             | Unlimited                 | 0                             | 1                         |
 | OF MANY TO EXACT ONE| 0                             | Unlimited                 | 1                             | 1                         |
 | Not specified (default logic) | 0                         | Unlimited                 | 0                             | 1                     |
+
+
+
+### Expose Associations
+
+Ao definir uma associação, a associação se torna disponível para a implementação interna de uma visualização CDS.
+
+Para tornar a associação acessível aos consumidores da visualização CDS, ela deve ser incluída na lista de projeção da visualização CDS da mesma forma que os campos. Sem essa exposição, a definição de associação é apenas um detalhe de implementação interna.
+
+É possível também realizar sua funcionalidade usando junções correspondentes.
+
+```java
+define view entity ZI_SalesOrder
+  as select from ...
+{
+  association [0..*] to ZI_SalesOrderItem as _Item
+    on $projection.SalesOrder = _Item.SalesOrder
+
+  key SalesOrder,
+  _Item,
+  ...
+}
+```
+
+### Model Compositional Relations
+
+Modelos de composição, ou **associações de composição**, representam uma especialização de associações
+
+Eles modelam uma relação baseada na existência entre um filho composicional e seu pai.
+
+Por exemplo, eles podem ser usados para definir que um item de pedido de venda (filho de composição) sempre pertence a um cabeçalho de ordem de vendas (pai de composição).
+
+Existem elementos específicos de sintaxe CDS que você pode usar para definir relações composicionais.
+
+```java
+define root view entity Z_CompositionRootView
+  as select distinct from t000
+{
+  composition [0..*] of Z_CompositionChildView as _ChildView
+
+  key abap.char(1) as RootKeyField,
+  _ChildView
+}
+```
+
+Um filho de composição deve especificar uma associação principal para seu pai de composição e expor essa associação em sua lista de projeção.
+
+Como há uma dependência estrita da existência de um único registro pai, a cardinalidade alvo mínima e máxima dessa associação é sempre 1.
+
+A cardinalidade é determinada pela associação de composição correspondente.
+
+Portanto, a especificação de cardinalidade é omitida na definição de tais associações.
+
+```java
+define view entity Z_CompositionChildView
+  as select distinct from t000
+{
+  association to parent Z_CompositionRootView as _RootView
+    on $projection.RootKeyField = _RootView.RootKeyField
+
+  composition [0..*] of Z_CompositionGrandchildView
+    as _GrandchildView
+
+  key abap.char(1) as RootKeyField,
+  key abap.char(1) as ChildKeyField,
+  _RootView,
+  _GrandchildView
+}
+```
+
+### Project Associations
+
+Você pode incluir as associações expostas de uma entidade CDS subjacente na lista de projeção de sua própria visualização CDS e, assim, expô-las lá também.
+
+Se necessário, você pode atribuir nomes de alias às associações projetadas.
+
+Em outras palavras, as associações expostas de uma entidade CDS podem, em princípio, ser usadas da mesma forma que os campos desta visualização CDS dentro da implementação de outra visualização CDS.
+
+```java
+define view entity ZI_SalesOrder
+  as select from ...
+{
+  association [0..*] to ZI_SalesOrderItem as _Item
+    on $projection.SalesOrder = _Item.SalesOrder
+
+  key SalesOrder,
+      _Item,
+  ...
+}
+
+define view entity ZC_SalesOrder
+  as select from ZI_SalesOrder
+{
+  key ZI_SalesOrder.SalesOrder,
+      ZI_SalesOrder._Item as _SalesOrderItem
+}
+```
+
+#### Define Path Expressions
+
+Monta uma hieraquia de CDSs. O Path Expressions faz utilização dos *exposes* de cada CDS em um nível superior. Permite que a arquitetura da CDS fique muito mais performática.
+
+Hieraquia:
+Schedule -> Order Item -> Product -> Product Text
+
+```java
+define view entity Z_ViewWithPathExpressions
+  as select from ZI_SalesOrderScheduleLine
+{
+  key SalesOrder,
+  key SalesOrderItem,
+  key SalesOrderScheduleLine,
+      _SalesOrderItem,
+      _SalesOrderItem.Product as SalesOrderItemProduct,
+      _SalesOrderItem._Product,
+      _SalesOrderItem._Product.Product,
+      _SalesOrderItem._Product._Text
+}
+```
+
+#### Implicit Joins (Joins Implícitos)
+
+Se os campos forem adicionados usando expressões de path, as condições definidas nas definições de associação serão implicitamente convertidas em JOINs.
+
+Consequentemente, as duas expressões de caminho, _SalesOrderItem.Product e _SalesOrderItem._Product.Product, resultam em dois JOINs efetivos. Mesmo sem associações, na *query* são feitos Joins de forma implícita.  
+
+```java
+define view entity Z_ViewWithPathExpressions
+  as select from ZI_SalesOrderScheduleLine
+{
+  key SalesOrder,
+  key SalesOrderItem,
+  key SalesOrderScheduleLine,
+      _SalesOrderItem,
+      _SalesOrderItem.Product as SalesOrderItemProduct,
+      _SalesOrderItem._Product,
+      _SalesOrderItem._Product.Product,
+      _SalesOrderItem._Product._Text
+}
+```
+```SQL
+CREATE OR REPLACE VIEW "Z_VIEWWITHPATHEXPRESSIONS" AS SELECT
+  "ZI_SALESORDERSCHEDULELINE"."MANDT" AS "MANDT",
+  "ZI_SALESORDERSCHEDULELINE"."SALESORDER",
+  "ZI_SALESORDERSCHEDULELINE"."SALESORDERITEM",
+  "ZI_SALESORDERSCHEDULELINE"."SALESORDERSCHEDULELINE",
+  "A0"."PRODUCT" AS "SALESORDERITEMPRODUCT"
+FROM
+  "ZI_SALESORDERSCHEDULELINE"
+  LEFT OUTER MANY TO ONE JOIN "ZI_SALESORDERITEM" AS "A0" ON
+    "ZI_SALESORDERSCHEDULELINE"."SALESORDER" = "A0"."SALESORDER" AND
+    "ZI_SALESORDERSCHEDULELINE"."SALESORDERITEM" = "A0"."SALESORDERITEM" AND
+    "ZI_SALESORDERSCHEDULELINE"."MANDT" = "A0"."MANDT"
+  LEFT OUTER MANY TO ONE JOIN "ZI_PRODUCT" AS "A1" ON
+    "ZI_SALESORDERITEM"."PRODUCT" = "A1"."PRODUCT" AND
+    "ZI_SALESORDERITEM"."MANDT" = "A1"."MANDT"
+```
+
+Em nível de banco de dados, os Joins substituem as associações. Também é possível declarar os Joins manualmente sem se preocupar em fazer exposição de outras associações.
+
+**Você deve evitar usar junções (potencialmente implícitas) de fontes de dados para manter a complexidade estática das suas CDS mais baixa.**
+
+Essa consideração é especialmente importante para suas CDS centrais e reutilizadas. Em vez de desnormalizar explicitamente ou implicitamente modelos CDS, deve-se tentar modelar as relações correspondentes das fontes de dados usando associações e disponibilizando essas associações para os consumidores de suas visualizações CDS (possivelmente distribuídas por várias visualizações CDS associadas).
+
+Os consumidores podem então navegar seguindo as associações expostas, descobrir toda a rede de modelos conectados e realizar apenas as junções que são realmente necessárias.
+
+
+#### Mudanças na Cardinalidade 
+
+As expressões de path podem influenciar o número de registros de dados selecionados e, assim, influenciar a cadinalidade do resultado da seleção, introduzindo junções e filtros.
+
+```java
+define view entity Z_ViewWithPathExprsChngngCards
+  as select from ZI_Product
+{
+  key Product,
+  key _Text[*:inner].Language
+}
+```
+
+É possível também filtrar pelo campo, restrigindo por uma constante.
+
+```java
+define view entity Z_ViewWithPathExprsChngngCards
+  as select from ZI_Product
+{
+  key Product,
+      _Text[1:Language='E'].ProductName As ProductNameInEnglish,
+      _Text[1:Language='E'].Product As ProductTextInEnglish,
+}
+```
+
+Na hora do *association* é possível usar do comando **with default filter** para definir a constante "E" para o campo Language.
+
+
+### Utilização de Associations dentro do Código ABAP
+
+Dentro da sua aplicação ABAP, você pode aproveitar as associações expostas de uma visualização CDS ao selecionar dados desta visualização CDS.
+
+Assim como na CDS, você pode especificar expressões de caminho com associações no código ABAP.
+
+Essas expressões de caminho podem acessar os campos das respectivas visualizações CDS alvo.
+
+No entanto, ao contrário das visualizações CDS, você não pode incluir nenhuma associação como um elemento na lista de resultados do seu comando select.
+
+```sql
+SELECT \_salesorder-salesordertype,
+       \_salesorderitem\_product\_text[ (1) inner : 
+         where language = 'E' ]-productname
+  FROM zi_salesorderscheduleline
+  WHERE \_salesorderitem\_product-producttype EQ 'FERT'
+  INTO TABLE @DATA(lt_result).
+```
+
+## Annotations
+
+.
+.
+.
+
 ## Boas Práticas
 
 ### Evite lógica de negócios em visualizações CDS
