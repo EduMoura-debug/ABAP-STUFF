@@ -462,7 +462,7 @@ Existem duas alternativas para especificar a cardinalidade de uma associação:
 
 - Uma especificação de cardinalidade usando os elementos de sintaxe *[OF [EXACT] ONE/MANY] TO [EXACT] ONE/MANY* permite não apenas capturar a cardinalidade alvo, mas também a cardinalidade de origem.
 
-| Cardinality         | Records of Association Source |                           | Records of Association Target |                           |
+| Cardinality         | Records of Association Source                             | Records of Association Target                             |
 |---------------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
 |                     | **Minimum**                   | **Maximum**               | **Minimum**                   | **Maximum**               |
 | [1]                 | 0                             | Unlimited                 | 1                             | 1                         |
