@@ -622,4 +622,4 @@ Para cada tabela de banco de dados, deve ser criada uma visualização de base d
 
 Por exemplo, uma vista `I_Material` para a tabela `MARA`.
 
-Use Visualizações Básicas em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.
+Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.

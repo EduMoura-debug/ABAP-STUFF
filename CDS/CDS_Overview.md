@@ -448,6 +448,24 @@ A definição e aplicação do buffer estará sempre alinhada com as seleções 
 
 
 
+## Boas Práticas
+
+### Evite lógica de negócios em visualizações CDS
+
+Tente usar o CDS Views apenas para modelagem de dados. 
+
+Se você adicionar algumas condições ou regras relacionadas a negócios, elas provavelmente precisarão de atualizações frequentes, que podem quebrar programas, que usam essas vistas do CDS, e testes de unidade. Mudanças nas Visualizações do CDS também podem influenciar as Visões de CDS superiores de forma implícita.
+
+Use CDS Views apenas como modelos de dados e separar a lógica de negócios correspondente em programas ABAP ou objetos de negócio.
+
+### Evite acesso direto a tabelas de banco de dados e funções de tabela na hierarquia de visualização CDS da camada superior
+
+Para cada tabela de banco de dados, deve ser criada uma visualização de base de dados ou uma função de tabela correspondente à Visualização Básica do CDS. Essas vistas descrevem nomes significativos para campos de tabelas de banco de dados, adicionam associações e anotações específicas de dados.
+
+Por exemplo, uma vista `I_Material` para a tabela `MARA`.
+
+Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.
+
 ## Atalhos Eclipse 
 
 - SHIFT + F1 = Pretty Printer
