@@ -696,9 +696,239 @@ SELECT \_salesorder-salesordertype,
 
 ## Annotations
 
-.
-.
-.
+### Sintaxe
+
+Conceito básico de modelagem da CDS
+
+As definições de anotação tem tipo de objeto técnico DDLA. São definidos pela própria SAP e enviados como os próprios modelos CDS.
+
+CRTL + SHIFT + A no Eclipse para visualizar as Annotations
+
+Ao aplicar anotações dentro das definições de CDS utiliza-se o **@**. Devem ser localizadas antes do nome da entidade anotada ou de seu componente. Exemplo de anotações: EndUserText; AbapCatalog; Semantics.
+
+```java
+@EndUserText.label : 'Tabela Order Item'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table zzdlcdst_ord_it {
+
+  key client           : abap.clnt not null;
+  key sales_order      : int4 not null;
+  key sales_order_item : int4 not null;
+  product              : int4;
+  @Semantics.quantity.unitOfMeasure : 'zzdlcdst_ord_it.product_unity'
+  product_quantity     : abap.quan(10,2);
+  product_unity        : meins;
+  @Semantics.amount.currencyCode : 'zzdlcdst_ord_it.currency'
+  total_value          : abap.curr(10,2);
+  currency             : waers;
+  @Semantics.systemDateTime.createdAt: true
+  creation_date        : dats;
+  creation_user        : uname;
+  last_changed_by      : uname;
+  last_changed_from    : timestamp;
+}
+```
+
+#### Annotation Names
+
+Nomes de anotações são estruturados hierarquicamente. O nome de anotação totalmente qualificado é composto sucessivamente de vários níveis potenciais de hieraquia de componentes intermidários, terminando com um elemento folha. Os compontentes individuais são separados por pontos.
+
+Por exemplo: **@Semantics.quantity.unitOfMeasure**
+
+- Semantics = domínio
+- quantity = elemento intermediário
+- unitOfMeasure = elemento folha
+
+Elementos estruturais intermediários podem ramificar, formando uma árvore de nomes de anotação. A tabela a seguir mostra os domínios de maior importância. 
+
+| Domain           | Description                                                                                      |
+|------------------|--------------------------------------------------------------------------------------------------|
+| ABAPCatalog      | Controls the ABAP runtime environment as well as the ABAP Data Dictionary and defines extensibility options |
+| AccessControl    | Documents and controls the authorization checks for CDS models                                   |
+| Aggregation      | Defines elements that can be used as aggregating key figures (successor of DefaultAggregation)   |
+| Analytics        | Defines analytical data models and applications                                                  |
+| AnalyticsDetails | Defines the details of an analytical query, such as its standard layout and the exception aggregations to be applied |
+| Consumption      | Provides hints for CDS model consumers that are evaluated in particular by implementation frameworks |
+| EndUserText      | Defines translatable label texts                                                                  |
+| Environment      | Controls the defaulting logic of parameters with system variables as well as special SQL operations |
+| Event            | Defines properties of event signatures                                                            |
+| Hierarchy        | Defines hierarchical relationships                                                                |
+| Metadata         | Controls the annotation enrichments of a CDS view by enabling CDS metadata extensions and the propagation of element annotations |
+| ObjectModel      | Describes the basic structural properties of the data models                                      |
+| OData            | Defines the exposure of CDS models in OData services                                              |
+| Search           | Controls the search functionality                                                                 |
+| Semantics        | Describes the basic semantics of types, elements, and parameters                                  |
+| UI               | Defines a semantic user interface (UI) representation that is independent of the specific UI implementation technology |
+| VDM              | Classifies CDS models in the virtual data model (VDM)                                             |
+
+#### Annotation Types and Values
+
+Os tipos de anotações CDS podem representar um valor escalar, uma estrutura ou um array. 
+
+Ao anotar um modelo CDS, a tipagem consistente é reforçada pelas verificações de sintaxe CDS. Valores de anotação só são permitidos se eles correspoderem aos tipos especificados da anotação CDS.
+
+Dependendo da atribuição de tipo real, os valores admissíveis podem ser: Valores Booleanos, Valores de String, Referências a elementos CDS.
+
+#### Valores de enumeração (Enumeration Values)
+
+Os valores de enumeração são usados para restringir a faixa de valores escalares admissíveis que são tecnicamente definidos pelo tipo de uma anotação CDS.
+
+As constantes capturadas nas listas de enumeração têm um significado semântico, que pode ser interpretado pelo ambiente de runtime do ABAP ou por frameworks que executam ou usam os modelos CDS.
+
+Dentro das definições de anotação, essas listas de valores admissíveis são especificadas pela palavra-chave enum.
+
+A enumeração ilustrada define que a anotação ObjectModel.dataCategory só pode ter um desses valores: TEXT, HIERARCHY, ou VALUE_HELP.
+
+```java
+annotation ObjectModel {
+  ...
+  dataCategory : String(30) enum { TEXT;
+                                   HIERARCHY;
+                                   VALUE_HELP; };
+  ...
+};
+```
+
+Se um valor de enumeração deve ser usado para especificar uma anotação em um modelo CDS, esse valor pode ser endereçado diretamente pelo caractere especial **#**.
+
+Neste exemplo, a categoria de dados da visão CDS **ZI_ProductText** é definida como TEXT referenciando (**#**) o valor de enumeração correspondente da anotação **ObjectModel.dataCategory**.
+
+```java
+@ObjectModel.dataCategory: #TEXT
+define view entity ZI_ProductText as select ...
+```
+
+
+#### Valores iniciais de Anotações (Annotation Default Values)
+
+Valores padrão especificados na definição de anotação CDS. Tal valor padrão se aplica se a anotação for usada sem uma avaliação esplícita. 
+
+#### Escopo de Anotação (Annotation Scopes)
+
+Dentro do modelo CDS, as anotações podem aparecer no nível do cabeçalho para fornecer informações para as entidades CDS anotadas como um todo ou no nível de componente individual (parâmetros ou elementos projetados).
+
+A especificação de escopo define onde uma determinada anotação é admissível para ser usada dentro de um modelo CDS. Por exemplo, o escopo da anotação Semantics.quantity é definido como ELEMENT.
+
+Como resultado, essa anotação pode ser usada para anotar elementos CDS, ou seja, campos e associações.
+
+Ela não pode ser usada para anotar parâmetros ou modelos CDS inteiros.
+
+Anotações como Semantics.systemDate.createdAt e Semantics.quantity.unitOfMeasure, que não são especificamente definidas com seus próprios escopos, herdam suas configurações de escopo de suas anotações pai, Semantics.systemDate e Semantics.quantity, respectivamente.
+
+Definir escopos de anotação requer obter respostas para as seguintes perguntas:
+  - A anotação pode ser usada mais de uma vez ou no máximo uma vez em um modelo CDS?
+  - Será possível usar a anotação em visualizações estendidas do CDS?
+  - A anotação será ou poderá ser propagada por todo o stack de visualização do CDS?
+
+### Efeitos das Annotations
+
+Os metadados capturados nas anotações do CDS podem controlar tanto a geração de artefatos no momento do projeto quanto a aplicação da lógica CDS modelada em tempo de execução.
+
+Além disso, as anotações da CDS também podem ter como objetivo documentar certas propriedades dos modelos do CDS.
+
+Essas propriedades documentadas podem ser usadas, por exemplo, para identificar modelos CDS relevantes, bem como para verificações de consistência dos mesmos.
+
+Vejamos a visualização de CDS de amostra Z_ViewWithODataExposure, que está equipada com várias anotações, que discutiremos nesta aula.
+
+```java
+@ObjectModel.usageType: { serviceQuality : #B,
+                          sizeCategory  : #XL,
+                          dataClass     : #TRANSACTIONAL }
+
+@OData.entityType.name: 'ViewWithODataExposure_Type'
+
+define view entity Z_ViewWithODataExposure
+  with parameters
+    P_CreationDate : sy-datum
+  as select from ZI_SalesOrderItem
+
+  @Consumption.hidden: true
+  @Environment.systemField: #SYSTEM_DATE
+
+{
+  key SalesOrder,
+  key SalesOrderItem,
+      CreationDate
+}
+where CreationDate = $parameters.P_CreationDate
+```
+
+Como mencionado, as estruturas podem aproveitar as informações capturadas em anotações para gerar seus artefatos de tempo de design.
+
+Exemplos de tais artefatos são os serviços OData, que são criados pela infraestrutura da Linguagem de Definição de Adaptação de Serviço (SADL) a partir de modelos CDS.
+
+Se a visualização CDS Z_ViewWithODataExposure for exposta como uma entidade em um serviço OData, o nome do tipo de entidade OData é derivado da anotação @OData.entityType.name, conforme mostrado:
+
+```java
+@OData.entityType.name: 'ViewWithODataExposure_Type'
+```
+
+```java
+<EntityType ... Name="ViewWithODataExposure_Type">
+  <Key>
+```
+
+As anotações de CDS também são interpretadas pelo ambiente de tempo de execução ABAP e podem influenciar a execução de uma seleção de dados.
+
+Por exemplo, parâmetros de modelos CDS podem ser mapeados por anotações CDS em variáveis de tempo de execução.
+
+O ambiente de tempo de execução ABAP atribui automaticamente os respectivos campos do sistema aos parâmetros que são anotados dessa maneira se eles não forem fornecidos explicitamente no contexto de uma seleção de dados através da interface ABAP SQL.
+
+Em nosso exemplo, aproveitamos esse mecanismo para fornecer o parâmetro P_CreationDate com a data atual do sistema
+@Environment.systemField: #SYSTEM_DATE
+
+O parâmetro em si não será exposto aos consumidores de serviços, por isso é anotado com @Consumption.hidden: true.
+
+```java
+with parameters  
+  @Consumption.hidden: true  
+  @Environment.systemField: #SYSTEM_DATE  
+  P_CreationDate : sy-datum
+```
+
+Além das anotações CDS que afetam direta ou indiretamente a execução em tempo de execução de uma seleção de dados, também há anotações CDS que servem apenas para fins de documentação.
+
+Essas anotações suportam a seleção de modelos CDS adequados, bem como análises e verificações dos mesmos.
+
+Por exemplo, você pode usar classificações de desempenho @ObjectModel.usageType... para selecionar um modelo CDS que atenda aos requisitos de seu aplicativo em relação à taxa de transferência de dados e eficiência de processamento.
+
+Vamos dar uma olhada nas anotações de visualização CDS correspondentes.
+
+Qualidade de serviço @ObjectModel.usageType.serviceQuality descreve quais características de desempenho um modelo CDS possui.
+
+O valor de qualidade B significa que o modelo CDS pode, em princípio, ser usado dentro da lógica de aplicativos transacionais.
+
+A categoria de tamanho especificada @ObjectModel.usageType.sizeCategory responde à questão de quantos registros de dados são normalmente processados dentro de uma solicitação de seleção.
+
+Nesse contexto, não é importante quantos registros de dados o resultado da seleção contém, mas sim quantos registros de dados são efetivamente usados para seu cálculo.
+
+A categoria de tamanho mantida fornece uma dica para estimar os requisitos de recursos de uma solicitação de seleção no banco de dados SAP HANA.
+
+No exemplo dado, o valor XL significa que o processamento de menos de 100 milhões de registros de dados é esperado.
+
+```java
+@ObjectModel.usageType: {
+    serviceQuality : #B,
+    sizeCategory   : #XL,
+    dataClass      : #TRANSACTIONAL
+}
+```
+
+Por fim, a categoria de dados  @ObjectModel.usageType.dataClass pode ser usada como um indicador para os consumidores definirem estratégias de cache adequadas para os dados selecionados.
+
+Considerando que os metadados geralmente só mudam devido a correções ou atualização de um sistema e , portanto, podem ser apropriados para buffer, os dados transacionais (TRANSACTIONAL) devem ser considerados voláteis.
+
+Em outras palavras, esses dados podem estar sujeitos a mudanças frequentes e signigicativas ao longo do tempo.
+
+Consequentemente, deve-se esperar que os dados correspondentes, se armazenados em buffer, se tornem desatualizados após um período de tempo.
+
+
+### Propagation Logic Simple Type Hierarchies
+
+
 
 ## Boas Práticas
 
@@ -725,3 +955,5 @@ Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualiza
 - CTRL + CLICK = Transitar para tabelas, composites, views, etc
 
 - CTRL + SPACE = Visualizar campos da tabela automaticamente, funções, possíveis implementações.
+
+- CRTL + SHIFT + A = visualizar as Annotations
