@@ -925,10 +925,522 @@ Em outras palavras, esses dados podem estar sujeitos a mudanças frequentes e si
 
 Consequentemente, deve-se esperar que os dados correspondentes, se armazenados em buffer, se tornem desatualizados após um período de tempo.
 
+### Propagação
 
-### Propagation Logic Simple Type Hierarchies
+Modelos de CDS podem ser definidos um em cima do outro. Isso se aplica aos tipos simples de CDS, bem como aos outros modelos de visualização.
+
+Por padrão, as anotações dos modelos CDS Filhos são tranferidos para os modelos Pai. A consistência é garantida ao aplicar uma lógica de propagação.
+
+### Extensões de Metadados (Metadata Extensions)
+
+Extensões de metadados CDS são objetos de desenvolvimento transportáveis do tipo técnico **DDLX**.
+
+Em princípio, extensões de metadados CDS permitem que você enriqueça e substitua as anotações ativas existentes de um modelo CDS, que suporta extensões de metadados. Pode haver potencialmente uma pluralidade de extensões de metadados CDS para uma única entidade CDS.
+
+As extensões de metadados do CDS são organizadas em camadas.
+
+Elas se sobrepõem umas às outras de acordo com a camada à qual são atribuídas. A imagem fornece uma visão geral dos relacionamentos de sobreposição entre as camadas.
 
 
+| Layer        | Overlays Layer (Including All Subordinate Layers) |
+|--------------|----------------------------------------------------|
+| CUSTOMER     | PARTNER                                            |
+| PARTNER      | INDUSTRY                                           |
+| INDUSTRY     | LOCALIZATION                                       |
+| LOCALIZATION | CORE                                               |
+| CORE         | –                                                  |
+
+Por exemplo, extensões de metadados CDS da camada PARTNER sobrepõem todas as extensões de metadados CDS da camada INDUSTRY.
+
+Isso se aplica a todas as extensões de metadados CDS das camadas subordinadas LOCALIZATION e CORE da camada INDUSTRY também.
+
+Dentro da mesma camada, a ordem de sobreposição das extensões de metadados CDS não é definida e, portanto, não é garantida.
+
+```java
+@Metadata.allowExtensions: true
+define view entity ZC_SalesOrderItem
+  as select from ZI_SalesOrderItem
+{
+  @EndUserText.label: 'Sales Order'
+  key SalesOrder,
+  key SalesOrderItem,
+      Product
+}
+```
+
+```java
+@Metadata.layer: #CUSTOMER
+annotate view ZC_SalesOrderItem with
+{
+  @UI.lineItem: [{importance: #HIGH}]
+  SalesOrder;
+
+  @UI.lineItem: [{importance: #HIGH}]
+  SalesOrderItem;
+}
+```
+
+## Controle de Acesso (Access Controls)
+
+### Fundamentos of Access Controls
+
+Do ponto de vista da autorização, um usuário final deve ter acesso somente às funções e dados necessários para cumprir tarefas comerciais específicas (seguindo o princípio do menor privilégio).
+
+Isso significa que um usuário deve ter somente um conjunto mínimo de autorizações (LGPD).
+
+Um controle de autorização suportado pelo sistema pode ser configurado no nível funcional, bem como no nível de registros de dados individuais (ou para informações parciais deles).
+
+Em particular, o acesso a dados pessoais sensíveis não requer apenas uma proteção funcional do aplicativo, que é chamada de autorização inicial, mas também um controle granular fino, que permite diferenciar o acesso aos registros de dados protegidos individuais (autorização de instância) avaliando os valores que eles contêm.
+
+O exemplo a seguir ilustra as diferenças entre os dois níveis mencionados de controle de autorização:
+- Em princípio, os funcionários do departamento de vendas e distribuição devem ser capazes de criar e visualizar pedidos de vendas.
+- Em contraste, os funcionários do departamento de recursos humanos não devem ser capazes de usar as funções correspondentes.
+
+Isso pode ser alcançado não concedendo aos últimos funcionários acesso aos aplicativos do departamento de vendas e distribuição; ou seja, eles não recebem nenhuma autorização de início para eles (chamada da transação, do app, etc).
+
+
+Os controles de acesso CDS são definidos como funções CDS que alavancam a linguagem de controle de dados (DCL).
+
+No ambiente ABAP Development Tools (ADT), eles são criados em um diálogo guiado semelhante aos modelos de dados CDS.
+
+Este diálogo de criação pode ser aberto, por exemplo, indo para a barra de menu e escolhendo
+-> Arquivo - Novo - Outro - ABAP Core Data Services - Access Control.
+
+Na primeira etapa do assistente de criação, você pode inserir o nome (Name) do objeto DCLS, sua descrição (Description) e a entidade CDS (Protected Entity), que se refere aos dados que serão protegidos pelo controle de acesso CDS.
+
+
+No exemplo, o nome do DCLS corresponde ao nome da entidade CDS protegida ZI_SalesOrder em letras maiúsculas.
+
+A implementação do controle de acesso imediatamente após sair do assistente de criação clicando em Concluir.
+
+```java
+@EndUserText.label: 'Auto assigned mapping role for ZI_SalesOrder'
+@MappingRole: true
+define role ZI_SALESORDER {
+    grant select on ZI_SalesOrder
+    where (entity_element_1,
+           entity_element_2)
+        = aspect pfcg_auth(authorization_object,
+                           authorization_field_1,
+                           authorization_field_2,
+                           filter_field_1 = 'filter_value_1');
+}
+```
+
+Em princípio, as funções CDS podem conceder aos usuários acesso irrestrito aos resultados da seleção.
+
+No entanto, as funções CDS geralmente contêm condições sob as quais o acesso aos dados dos modelos CDS protegidos é concedido aos usuários.
+
+Essas regras de acesso podem ser compostas de várias condições de acesso.
+
+As últimas podem ser formuladas correlacionando campos dos modelos CDS com o usuário conectado, com configurações específicas do usuário, com valores literais constantes ou com campos de autorização de objetos de autorização.
+
+Esses objetos de autorização são os mesmos em que se baseia o conceito de autorização baseado em PFCG de transação.
+
+
+### Mode of Action of Access Controls
+
+Ao selecionar dados de um modelo CDS usando a interface ABAP SQL, as funções CDS, que são atribuídas aos modelos CDS, são avaliadas automaticamente.
+
+Dependendo do resultado da avaliação, a instrução select é automaticamente enriquecida com critérios de filtro adicionais pelo ambiente de tempo de execução ABAP.
+
+Os critérios de filtro injetados são derivados das regras de acesso, que são definidas nos controles de acesso do CDS, levando em consideração as autorizações do usuário conectado.
+
+Você pode anotar seus modelos CDS com **@AccessControl.authorizationCheck**... para especificar se uma verificação de autorização é necessária para uma seleção de dados.
+
+Se essa anotação estiver faltando, espera-se que nenhuma verificação de autorização seja necessária.
+
+Isso corresponde a anotar implicitamente o modelo CDS correspondente com **@AccessControl.authorizationCheck:#NOT_REQUIRED**.
+
+| Annotation Value | Description |
+|------------------|-------------|
+| **MANDATORY**     | The annotated CDS model will have a CDS access control. If no CDS access control is defined, data selections result in runtime errors. |
+| **CHECK**         | The annotated CDS model will have a CDS access control. In contrast to value MANDATORY, no existence check for the CDS access control is performed at runtime. |
+| **NOT_REQUIRED**  | In general, a CDS access control isn’t required. This value corresponds to the default value, which is specified in the annotation definition. |
+| **NOT_ALLOWED**   | Defining a CDS access control isn’t allowed. Note that this value has no effect on the runtime. It prevents defined CDS access controls from becoming effective. |
+| **PRIVILEGED_ONLY** | A direct data selection from the annotated CDS model is only possible through privileged access, which requires a special addition to the standard ABAP SQL statement. |
+
+
+#### Implementar Access Controls
+
+Defina acessos de controle de forma uniforme. Em muitos casos, todos os modelos CDS intimamente relacionados a um único objeto de aplicativo devem ser protegidos da mesma maneira.
+
+Um exemplo típico é o documento de pedido de vendas, que é estruturado em dados de cabeçalho, item.
+
+Por padrão, um funcionário de vendas deve ter permissão para visualizar a instância inteira do documento de pedido de vendas e não apenas suas partes.
+
+Isso significa que um usuário deve ter permissão para visualizar os dados de cabeçalho de uma instância de pedido de vendas selecionada, bem como os dados correspondentes de seus itens.
+
+Para realizar esse requisito, os controles de acesso do CDS para os modelos CDS correspondentes devem ser implementados de forma uniforme com base nas mesmas condições de acesso.
+
+Nesse contexto, você pode aproveitar as expressões de path nas definições de função do CDS para introduzir campos que controlam o acesso e que ainda não fazem parte da lista de campos dos modelos CDS a serem protegidos.
+
+Por exemplo, a proteção de acesso do cabeçalho do pedido de vendas CDS view ZI_SalesOrder, também pode ser implementada pela função CDS ZI_SalesOrderItem.
+
+Isso é feito alavancando a associação _SalesOrder, que relaciona os registros dos itens aos registros dos cabeçalhos do pedido de vendas.
+
+```java
+@AccessControl.authorizationCheck: #CHECK
+define view entity ZI_SalesOrderItem
+  as select from ...
+  association [1..1] to ZI_SalesOrder as _SalesOrder
+    on $projection.SalesOrder = _SalesOrder.SalesOrder
+{
+  key SalesOrder,
+  key SalesOrderItem,
+  _SalesOrder, ...
+}
+```
+
+Aqui mostramos como está protegendo a função CDS ZI_SalesOrderItem.
+
+Ele acessa o campo SalesOrderType da visualização CDS ZI_SalesOrder por meio da expressão de path _SalesOrder.SalesOrderType em uma condição de acesso.
+
+Como resultado, os registros de dados do item do pedido de vendas são protegidos da mesma forma que o registro de dados correspondente do cabeçalho do pedido de vendas.
+
+```java
+@MappingRole: true
+define role ZI_SalesOrderItem
+  grant select on ZI_SalesOrderItem
+    where ( _SalesOrder.SalesOrderType ) =
+      aspect pfcg_auth ( V_VBAK_AAT,
+                         AUART,
+                         ACTVT = '03' );
+```
+
+#### Implementação de Herança do Acess Control
+
+As opções de herança aplicáveis são explicadas no exemplo a seguir.
+
+Mostramos uma visualização CDS ZC_SalesOrder, que projeta campos da visualização CDS ZI_SalesOrder, mostrada anteriormente.
+
+```java
+@AccessControl.authorizationCheck: #CHECK
+define view entity ZC_SalesOrder
+  as select from ZI_SalesOrder
+{
+  key SalesOrder,
+      SalesOrderType
+}
+```
+```java
+@MappingRole: true
+define role ZC_SalesOrder
+{
+  grant select on ZC_SalesOrder
+    where ( SalesOrderType =
+            aspect pfcg_auth ( V_VBAK_AAT,
+                               AUART ),
+            ACTVT = '03' );
+}
+```
+
+Em vez de implementar a função CDS ZC_SalesOrder do zero, como mostrado, você também pode reutilizar a lógica da função CDS ZI_SalesOrder aplicando o mecanismo de herança dos controles de acesso CDS.
+
+De uma perspectiva técnica, há três maneiras de implementar essa lógica de herança.
+
+Como primeira alternativa, você pode definir as condições de acesso da função DCL ZC_SalesOrder herdando todas as condições de acesso definidas para a visualização CDS ZI_SalesOrder.
+
+```java
+@MappingRole: true
+define role ZC_SalesOrder {
+  grant select on ZC_SalesOrder
+    where inheriting conditions from entity ZI_SalesOrder;
+}
+```
+
+Como uma segunda alternativa, você pode definir as condições de acesso da função DCL ZC_SalesOrder herdando todas as condições de acesso da função DCL ZI_SalesOrder para sua visualização CDS protegida ZI_SalesOrder.
+
+A implementação resultante é:
+```java
+@MappingRole: true
+define role ZC_SalesOrder {
+  grant select on ZC_SalesOrder
+    where inherit ZI_SalesOrder for grant select on ZI_SalesOrder;
+}
+```
+
+Como terceira alternativa, você pode herdar as regras de acesso da função DCL ZI_SalesOrder, conforme ilustrado.
+
+```java
+@MappingRole: true
+define role ZC_SalesOrder {
+  grant select on ZC_SalesOrder
+    inherit ZI_SalesOrder;
+}
+```
+*Esta opção é considerada obsoleta e não deve mais ser usada.*
+
+#### Implementar Acess Control sem Objetos Auth
+
+Nas definições de função do CDS, você pode avaliar diretamente o usuário conectado.
+
+O aspecto do elemento de sintaxe user permite que você faça referência ao usuário nas condições de acesso que você define.
+
+Ilustramos um exemplo em que os usuários estão autorizados a ler os pedidos de vendas da visualização CDS ZC_SalesOrder, que eles criaram (documentado pelo campo CreatedByUser).
+
+```java
+@MappingRole: true
+define role ZC_SalesOrderCreatedByMe {
+  grant select on ZC_SalesOrder
+    where CreatedByUser = aspect user;
+}
+```
+
+Em alguns casos, você pode querer aplicar um controle de acesso baseado em sua própria entidade que contém informações específicas do usuário.
+
+Nesses casos, você pode avaliar o uso de aspectos autodefinidos.
+
+Além da entidade CDS protegida e sua função CDS, você tem que definir a entidade CDS fornecendo as configurações específicas do usuário e o próprio aspecto autodefinido, o que é ilustrado no exemplo a seguir.
+
+Vamos supor que você tenha uma lista de usuários que são responsáveis por tipos de pedidos de vendas dedicados.
+
+Essa lista se tornará a base para controlar o acesso aos pedidos de vendas.
+```java
+@AccessControl.auditing.specification: '...'
+@AccessControl.auditing.type: #CUSTOM
+define view entity Z_ViewAsDataSourceForDclAspect
+  as select distinct from t000
+{
+  key cast( abap.char('USER_A') as vdm_userid ) as UserID,
+      abap.char('TAF') as SalesOrderType
+}
+union select distinct from t000
+{
+  key abap.char('USER_B') as UserID,
+      abap.char('OAF') as SalesOrderType
+}
+```
+```java
+define accesspolicy Z_DCLASPECT {
+  define aspect Z_DCLASPECT as
+    select from Z_ViewAsDataSourceForDclAspect
+    with user element UserID
+    {
+      SalesOrderType
+    }
+}
+```
+```java
+@MappingRole: true
+define role Z_ViewWithDclAspect {
+  grant select on Z_ViewWithDclAspect
+    where
+      SalesOrderType = aspect Z_DclAspect;
+}
+```
+
+Você também pode usar **valores literais** constantes para definir condições de acesso que não dependerão do usuário conectado.
+
+Essas condições independentes do usuário são principalmente adequadas para conceder a todos os usuários acesso a certos registros de dados ou para bloquear o acesso para todos os usuários por padrão.
+
+No último caso, uma adição especial à instrução select em ABAP é necessária para ainda ler os registros de dados afetados.
+
+#### Implementar Access Controls para Queries Analíticas
+
+#### Implementar Access Controls para Transactional App
+
+#### Implementar Access Control a Nível de Campo
+
+#### Modificações em Access Controls Liberadas pela SAP
+
+Você não pode alterar as definições de função CDS fornecidas pela SAP para atender aos seus requisitos sem aplicar modificações técnicas.
+
+No entanto, ao definir uma função CDS adicional, você pode modificar efetivamente o controle de acesso existente de um modelo CDS da SAP.
+
+De uma perspectiva funcional, dois mecanismos são suportados para adaptar uma função CDS por meio de outra função CDS:
+ - Substituir os controles de acesso CDS existentes.
+ - Combinar a lógica de suas funções CDS com as funções CDS existentes.
+
+Apenas os modelo CDS com anotação **@AcessControl.authorizationCheck:#NOT_ALLOWED** representam uma exceção. Essa anotaão impede a aplicação de controles de acesso.
+
+Ao redefinir um controle de acesso CDS usando o elemento de sintaxe de redefinição, você substitui completamente a sua lógica, conforme demonstrado em:
+
+```java
+@MappingRole: true
+define role ZC_SalesOrderRedefined {
+  grant select on ZC_SalesOrder
+    redefinition
+    where SalesOrderType = 'TAF';
+}
+```
+
+Aqui, a proteção de acesso da visualização CDS ZC_SalesOrder é alterada de modo que os usuários possam acessar todos os registros de dados com o tipo de pedido de venda TAF.
+
+Todas as outras restrições de acesso da visualização CDS ZC_SalesOrder são desativadas.
+
+Em vez de substituir a proteção de acesso existente de um modelo CDS, você também pode incorporá-la completamente na sua função CDS redefinida.
+
+Você pode alcançar isso usando a instrução que herda as condições da super.
+```java
+@MappingRole: true
+define role ZC_SalesOrderRedefined {
+  grant select on ZC_SalesOrder
+    redefinition
+    where inheriting conditions from super
+      and SalesOrderType = 'TAF';
+}
+```
+
+**combination mode or** e **combination mode and**
+
+
+#### Block Standard Data Selecions from CDS
+
+#### Desacoplando Access Controls do Input do Usuário
+
+#### Map CDS Fields onto Fields of Auth Obj
+
+### Testar Acess Control.
+
+Deve-se testar a funcionalidade dos seus controles de acesso CDS no contexto dos serviços qie expõe os modelos CDS protegidos.
+
+Esses testes de integração devem incluir seus aplicativos analíticos e serviços ODATA. Idealmente todas as funções e opções de seleção devem ser cobertas pelos testes.
+
+Transação para testar controle de acesso manual: **SACMSEL**
+  - Permite que você selecione os dados e analise os efeitos.
+
+## Serviços de Negócio ( Business Services )
+
+### Projection Views
+
+Para adaptar seus modelos CDS ao cenário de uso desejado, você precisa criar visualizações específicas para o serviço. Essas visualizações podem ser feitas como entidades CDS padrão.
+
+No contexto da programação ABAP RESTful, também existem visualizações CDS chamadas de **projeções**, que ajudam a automatizar o processamento transacional.
+
+As visualizações de **projeção** são um tipo especial de visualizações CDS. O objetivo delas é *criar interfaces de serviço com base em modelos CDS* mais gerais.
+
+Em geral, elas **não adionam novas funcionalidades**, mas organizam as funções existentes de maneira que possam ser facilmente usadas pelas interfaces de serviço.
+
+As visualizações CDS de projeção têm algumas diferenças em relação às visualizações CDS normais.
+
+Primeiro, as visualizações de projeção **só permitem definir projeções simples das fontes de dados subjacentes**, ou seja, não suportam consultas SQL complexas.
+
+Além disso, elas **não podem ser usadas como fontes de dados para outras visualizações**, ou seja, servem apenas como a camada superior em uma hierarquia de visualizações.
+
+A única exceção são as visualizações de projeção com o contrato CDS *transactional_interface*, que permitem criar outra camada de visualizações de projeção com o contrato *transactional_query* sobre elas.
+
+Por fim, as visualizações de projeção podem especificar estruturas compostas apenas se forem baseadas em fontes de dados que também definem essas estruturas.
+
+Esse aspecto é ilustrado no exemplo a seguir.
+
+A CDS abaixo fornece um exemplo de uma composição de duas visualizações CDS base.
+
+A visualização CDS ZI_Product define a visualização CDS raiz dessa composição.
+
+```java
+define root view entity ZI_Product
+  as select from zproduct
+  composition [0..*] of ZI_ProductText as _Text
+{
+  key product             as Product,
+      product_type        as ProductType,
+      creation_date_time  as CreationDateTime,
+      _Text
+}
+```
+
+```java
+@ObjectModel.dataCategory: #TEXT
+define view entity ZI_ProductText
+  as select from zproducttext
+  association to parent ZI_Product as _Product
+    on $projection.Product = _Product.Product
+{
+  key language      as Language,
+      product       as Product,
+      product_name  as ProductName,
+      _Product
+}
+```
+
+No topo desta composição base, umas composição implementada por projection views é definida. A root projection view ZC_Porduct desta composição é mostrada em:
+
+```java
+define root view entity ZI_Product 
+  as select from zproduct
+  composition [0..*] of ZI_ProductText as _Text{
+
+      key product             as Product,
+      product_type        as ProductType,
+      creation_date_time  as CreationDateTime,
+      _Text
+
+}
+```
+
+```java
+define root view entity ZC_Product
+  as projection on ZI_Product {
+    @Consumption.valueHelpDefinition: [
+      { entity: {name: 'ZI_ProductStdVH',
+                 element: 'Product'}}]
+    @ObjectModel.text.element: [ 'ProductName']
+
+    key Product,
+        ProductType,
+        @Semantics.text: true
+        _Text.ProductName : localized,
+        _Text : redirect to composition child ZC_ProductText
+  }
+```
+
+### Service Definition
+
+As definições de serviço determinam o conjunto de entidades expostas em serviços de negócio.
+
+Em teoria, essas definições são independentes dos *service bindings* usados e, portanto, dos protocolos (como **OData**) e cenários de uso (como UI).
+
+Tecnicamente, é possível reutilizar uma única definição de serviço em vários service bindings e serviços de negócios.
+
+Na prática, no entanto, a definição de serviço está geralmente ligada ao service binding planejado para atender aos requisitos funcionais do serviço de negócios.
+
+Por isso, recomenda-se expor *uma definição de serviço em apenas um serviço*. Porém, é possível extender o Service Definition utilizando a annotation "**@AbapCatalog.extensibility.extensible: true**".
+
+O *service binding* define o protocolo e o caso de uso que um serviço irá suportar.
+
+As entidades e suas relações (incluindo sua funcionalidade) expostas por um serviço são derivadas das definições de serviço, que são atribuídas ao *service binding*.
+
+#### Service Binding
+
+Os *service bindings* para serviços:
+- OData UI
+- OData Web API
+- InA
+- SQL Web API
+
+| **Binding Type**         | **Protocol**                          | **Description**                             |
+|--------------------------|----------------------------------------|---------------------------------------------|
+| OData V2 - UI            | OData V2                               | UI service                                  |
+| OData V4 - UI            | OData V4                               | UI service                                  |
+| OData V2 - Web API       | OData V2                               | Remote OData API service                    |
+| OData V4 - Web API       | OData V4                               | Remote OData API service                    |
+| InA - UI                 | InA                                    | Analytical query service for UI consumption |
+| SQL - Web API            | Open Database Connectivity (ODBC)      | Remote SQL API service                      |
+
+#### Use ODATA Service URLs
+
+Os Serviços de Negócio podem ser testados de várias maneiras. 
+
+As vinculações de serviço publicadas podem ser invocadas clicando no link exibido no campo URL do serviço.
+
+Você pode ajustar essas URLs de serviço adicionando parâmetros que permitem que você solicite informações específicas sobre o serviço.
+
+Por exemplo, você pode solicitar a exibição dos metadados do serviço de IU usando a seguinte solicitação:
+.../sap/opu/odata4/sap/zui_product_display/srvd/sap/product/0001/$metadata
+
+Além dos metadados, você também pode solicitar dados para os conjuntos de entidades individuais dos serviços.
+
+Por exemplo, você pode solicitar os dados do produto do serviço de IU usando a seguinte solicitação:
+.../sap/opu/odata4/sap/zui_product_display/srvd/sap/product/0001/Product
+
+Ao variar as URLs dos serviços, você pode simular diferentes acessos à funcionalidade dos serviços e comparar suas respostas com suas expectativas.
+
+#### Use UI Previews
+
+Para serviços de UI OData, você também pode ter uma primeira impressão de uma UI do SAP Fiori Elements usando a função Preview mostrada anteriormente.
+
+Este aplicativo UI pode ser usado para testar manualmente o serviço ODATA.
 
 ## Boas Práticas
 
