@@ -34,6 +34,26 @@ O Workflow se inicia quando um evento “dispara”, ou seja, é gerado o workfl
 
 Obs: Os usuários, os quais recebem tarefas para executar/aprovar, são comumente definidos a partir de tabelas Z (preenchidas em métodos anteriores), regras (FMs definidas na própria tarefa) ou cargos organizacionais em fluxos não standard.
 
+### Arquivar Workflow
+
+ Simplificando, quando você *arquiva* um workflow, ele é removido da instância SAP e colocado offline (ou seja, em um arquivo no seu servidor de aplicativos). 
+ 
+ O workflow (e todos os seus itens de trabalho, anexos, histórico de logs etc.) ainda está disponível para acesso somente leitura, mas seus dados desaparecem de muitas tabelas grandes do banco de dados SAP. Isso deixa o pessoal do Basis muito feliz. 
+ 
+ O arquivamento ocorre em duas etapas distintas: gravando um workflow em um arquivo compactado e, em seguida, excluindo o workflow do sistema SAP. Observe que você só pode arquivar workflows com o status CONCLUÍDO (ou CANCELADO). 
+ 
+ Por que você faria isso? Você pode arquivar workflows se:
+
+- Seu sistema de produção está em execução há alguns anos
+
+- Suas tabelas críticas de fluxo de trabalho SAP (como SWWWIHEAD, SWNCNTP0) estão crescendo rapidamente, impactando o desempenho e tornando as tarefas básicas mais lentas
+(como backups do sistema)
+
+- Você está migrando para um novo sistema e deseja reduzir a quantidade de dados da tabela do banco de dados
+
+Os riscos são pequenos. Esse procedimento existe há anos e é (presumivelmente) usado rotineiramente por milhares de grandes clientes SAP. Você não "exclui" os workflows até que o processo de "gravação" seja concluído com sucesso. E sim, os workflows são fisicamente excluídos do sistema de produção, mas permanecem em arquivos.
+
+É claro que você precisa ter muito cuidado com esses arquivos; agora é responsabilidade da equipe do Basis mantê-los seguros e com backup adequado.
 
 ## Pulos do Gato
 

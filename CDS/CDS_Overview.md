@@ -1442,6 +1442,25 @@ Para serviços de UI OData, você também pode ter uma primeira impressão de um
 
 Este aplicativo UI pode ser usado para testar manualmente o serviço ODATA.
 
+## Native SAP Hana
+
+### Implementação CDS Table Function
+
+Forma de colocar funções do banco de dados Hana dentro de uma CDS. Deve ser criada quando é preciso uma ação de banco para a CDS.
+
+O sistema de banco de dados relacional SAP HANA não só pode ser usado por meio da linguagem de consulta estruturada (SQL), mas também oferece ferramentas e bibliotecas de funções para muitas áreas, como análise e pesquisa de texto, processamento de dados geográficos e gráficos, matemática financeira, análise preditiva e aprendizado de máquina.  
+
+Você pode usar esses recursos por meio da linguagem específica do SAP HANA SQLScript, que combina elementos de linguagem SQL e imperativa.
+
+Usando **ABAP-Managed Database Procedures (AMDPs)**, é possível executar SAP HANA SQLScript do ABAP enquanto passa dados por parâmetros de entrada e recebe os resultados.
+
+Este método é aproveitado para funções de tabela CDS Tecnicamente, uma função de tabela SAP HANA é criada e executada. Uma função de tabela CDS pode ser usada como fonte de dados para uma visualização CDS, possibilitando o uso de recursos nativos do SAP HANA no CDS.
+
+### App Cenarios
+
+
+
+
 ## Boas Práticas
 
 ### Evite lógica de negócios em visualizações CDS
