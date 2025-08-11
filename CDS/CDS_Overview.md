@@ -1458,6 +1458,77 @@ Este método é aproveitado para funções de tabela CDS Tecnicamente, uma funç
 
 ### App Cenarios
 
+Os exemplos mais simples de funções de tabela CDS são solicitações SQL que usam recusos disponíveis no SAP HANA SQL.
+
+- Funções de processamento de string ou concatenação de string.
+- Funções para canlendário de fábrica.
+- Pesquisa de texto completo com muitas opções.
+- Funções por palavras chave.
+- Funções para navegar e agregar em hierarquia .
+
+Não serão usadas comumente. Tabelas CDS são frequentemente usadas na área de análise preditiva ou aprendizado de máquina (previsão de receita/liquidez ou previsão de consumo).
+
+Cenários treinados com dados históricos especifícos do cliente.
+
+Na prática, uma função de tabela CDS seleciona os dados de entrada solicitados, chama o procedimento de previsão com eles e retorna o resultado da previsão combinado com os dados de entrada.
+
+
+### Melhorar Performance e Evitar Erros nas Functions
+
+Deve-se considerar alguns aspectos adicionais para evitar surpresas prevenir erros e entender o desempenho da função de tabela.
+
+- Funções de tabela só podem executar operações de leitura no banco de dados HANA.
+- Os dados, bem como os objetos, já devem existir antes de serem usados.
+- Gerenciar transporte de objetos não nativos da SAP.
+
+**CUSTOM FIELDS**: Uma função de tabela CDS entregue pela SAP não pode ser estendida por uma extensão de visualização CDS com campos personalizados. Você teria que modificar o método AMDP de uma função de tabela CDS para estendê-la com campos personalizados.
+
+#### Performance
+
+O comportamento de tempo de execução de uma função de tabela CDS pode às vezes ser bastante surpreendente.
+
+Ao executar uma solicitação SQL SELECT, o otimizador resolve recursivamento todas as fontes de dados fornecidas na solicitação, até as tabelas de banco de dados puras, e combina suas definições em uma única soliciatação SQL.
+
+Nesse processo, as funções de tabela CDS também são resolvidas, e seu código SQLscript é combinado com todos os outros códigos SQL.
+
+A solicitação resultante pode ser grande, mas é otimizada para um plano de execução simplificado.
+
+Essa etapa é feita antes da seleção real dos dados.
+
+## Modelagem de App
+
+Componentes de infraestrutura do SAP NetWeaver Application Server para ABAP e metadados semânticos de entidades CDS permitem um novo modelo de programação. Isso reduz a programação individual ao mínimo.
+
+A infraestura, nesse modelo executa muitas tarefas de programação recorrentres e propensas e erros que são genericamente controladas por anotações semânticas motivadas por negócios e motivadas.
+
+
+### Arquitetura de Aplicação no SAP S/4HANA
+
+As principais tarefas de um aplicativo de negócios são:
+- Ler dados;
+- Preparar dados;
+- Apresentar dados;
+- Receber novas entradas ou alterações;
+- Verificar sua consistência;
+- Processar seu impacto;
+- Persistir os dados no banco;
+
+Em interfaces de usuário (UIs) modernas, como o SAP Fiori, que são completamente voltadas para as necessidades do usuário, a primeira parte da interação do usuário desempenha um papel importante, pois muitos tipos diferentes de informações são relevantes para a tarefa do usuário e devem estar diretamente disponíveis para dar suporte às decisões do usuário.
+
+A preparação dos dados necessários e sua exibição criam esforços substanciais de desenvolvimento e exigem conhecimento em diferentes áreas de aplicação.
+
+No entanto, para a segunda parte da interação do usuário — verificação e processamento de dados — partes comprovadas do programa podem ser reutilizadas na maioria dos casos.
+
+A experiência mostra que mais de 90% dos acessos de dados são acessos de leitura. O acesso de gravação (escrita) acontece com menos frequência.
+
+Para reduzir o esforço de desenvolvimento, a complexidade do programa e o esforço de manutenção, o modelo de programação do SAP S/4HANA foi otimizado para acessos de leitura.
+
+Ele usa visualizações CDS que preparam os dados brutos de forma reutilizável e adicionam metadados semânticos. Os metadados são avaliados por componentes de infraestrutura, reduzindo assim o volume de programação individual.
+
+O modelo de programação baseado em CDS do SAP S/4HANA e da SAP Business Technology Platform (SAP BTP), ambiente ABAP, oferece os seguintes benefícios, em comparação com o modelo de programação ABAP clássico:
+- Maior velocidade na seleção e preparação de grandes conjuntos de dados para a IU, pois as visualizações do CDS executam essas etapas diretamente no SAP HANA
+- Desenvolvimento simplificado e alta consistência nos serviços OData oferecidos por meio do desenvolvimento orientado a modelos com base em um modelo de dados unificado.
+- Flexibilidade ao usar opcionalmente a lógica ABAP implementada, se necessário
 
 
 
@@ -1478,6 +1549,9 @@ Para cada tabela de banco de dados, deve ser criada uma visualização de base d
 Por exemplo, uma vista `I_Material` para a tabela `MARA`.
 
 Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.
+
+
+
 
 ## Atalhos Eclipse 
 

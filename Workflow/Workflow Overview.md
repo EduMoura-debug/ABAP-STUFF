@@ -55,6 +55,7 @@ Os riscos são pequenos. Esse procedimento existe há anos e é (presumivelmente
 
 É claro que você precisa ter muito cuidado com esses arquivos; agora é responsabilidade da equipe do Basis mantê-los seguros e com backup adequado.
 
+
 ## Pulos do Gato
 
 SCC1 para transporte customizing de ativação de eventos
