@@ -1,4 +1,4 @@
-# Workflow Flexível
+# Workflow Flexível Overview
 
 Esse novo tipo de Workflow permite que você defina processos de aprovação para documentos de acordo com suas necessidades e foi introduzido no SAP S/4HANA como um conjunto de melhorias para o SAP Business Workflow. Ao utilizar o workflow flexível, você pode simplificar sua configuração.
 
@@ -19,15 +19,18 @@ Por meio dos aplicativos de administração de Workflow, o administrador pode lo
 
 O aplicativo **Manage Workflows** permite que um especialista em processos de negócios modele workflows com base nos requisitos do negócio, utilizando objetos predefinidos e funções integradas. Aqui, é possível configurar o fluxo do processo, definir condições de início, atribuir destinatários e definir o tratamento de exceções. É possível modelar processos de aprovação de uma ou várias etapas. As tarefas de aprovação relevantes ficam disponíveis para os aprovadores no aplicativo **My Inbox**. O workflow flexível oferece suporte à função de simulação e disponibiliza um componente reutilizável para exibir detalhes de aprovação, incluindo etapas concluídas e planejadas.
 
-O workflow flexível oferece diversas opções de extensibilidade. É possível definir condições personalizadas, regras de agentes personalizadas e uma lista de possíveis destinatários ao encaminhar tarefas. Você pode definir a lógica para configurar a prioridade da tarefa, a lista de processadores excluídos e os valores de atributos personalizados exibidos no aplicativo **My Inbox**.
+O workflow flexível também oferece diversas opções de extensibilidade. É possível definir condições personalizadas, regras de agentes personalizadas e uma lista de possíveis destinatários ao encaminhar tarefas. Você pode definir a lógica para configurar a prioridade da tarefa, a lista de processadores excluídos e os valores de atributos personalizados exibidos no aplicativo **My Inbox**.
 
 Usando os aplicativos para administração de workflows, um administrador pode buscar workflows com erros, exibir erros e realizar a resolução de problemas.
+
+Workflows criados no ambiente on-premise via SAPGUI (transações clássicas como SWDD) estão disponíveis para configuração no app Fiori Manage Workflows. Porém, workflows criados ou customizados diretamente no app Fiori Manage Workflows NÃO ficam disponíveis para edição no SAPGUI. A razão é que os apps Fiori oferecem uma interface moderna e simplificada para configuração e gestão, enquanto o SAPGUI permite o desenvolvimento completo dos workflows. Os workflows criados no SAPGUI são compatíveis para serem gerenciados via Fiori, mas alterações feitas no Fiori não são sincronizadas de volta para o ambiente SAPGUI.
 
 ### APPs relacionados
 
 - Flexible Workflow Administration
 - Continue Scenario Workflows
 - Continue Workflows
+- Manage Workflow
 - Manage Workflow Scenarios
 - Restart Scenario Workflows
 - Restart Suspended Workflows
@@ -48,21 +51,21 @@ Usando os aplicativos para administração de workflows, um administrador pode b
 | Recurso | Workflow Clássico | Workflow Flexível |
 | --- | --- | --- |
 | Disponibilidade | SAP ERP, SAP S/4HANA | SAP S/4HANA |
-| Configurado pelo app Gerenciar Workflows | Não | Sim |
+| Configurado pelo app Manage Workflows | Não | Sim |
 | Itens de trabalho | Sim | Sim |
-| Integração com Minha Caixa de Entrada | Sim | Sim |
+| Integração com My Inbox | Sim | Sim |
 | Tipo de processo suportado | Sequencial/paralelo | Sequencial |
 | Workflows ad hoc | Não | Sim, no módulo de gestão do ciclo de vida do produto (PLM) para workflows flexíveis |
 | Eventos | Sim | Sim |
-| Integração com o app Gerenciar Equipes e Responsabilidades para determinação de agente | Não | Sim, mas não disponível para workflows personalizados |
+| Integração com o app Manage Teams and Responsabilities para determinação de agente | Não | Sim, mas não disponível para workflows personalizados |
 | Substituição disponível (ativa/passiva) | Sim | Sim |
 | Workflow configurado por | Desenvolvedores (equipe de TI) | Especialista em processos de negócios |
-| Tratamento de exceções | Tratado com modelagem de fluxo | Tratamento de exceções no app Gerenciar Workflows para ações negativas |
+| Tratamento de exceções | Tratado com modelagem de fluxo | Tratamento de exceções no app Manage Workflows para ações negativas |
 | Monitoramento de prazos | Sim | Sim (a partir da versão SAP S/4HANA 1909) |
 | Integração com o app Manter Modelo de E-mail | Não | Sim (a partir da versão SAP S/4HANA 1909) |
 | Construtor de Workflow | Transação SWDD | Transação SWDD_SCENARIO |
 | Registros de workflow | Sim | Sim |
-| Complexidade dos workflows | De baixa a complexa, podendo ser modelada | Normalmente, fluxos complexos divididos em fluxos menores condicionais sequenciais no app Gerenciar Workflows |
+| Complexidade dos workflows | De baixa a complexa, podendo ser modelada | Normalmente, fluxos complexos divididos em fluxos menores condicionais sequenciais no app Manage Workflows |
 
 ### Qual utilizar? 
 
@@ -76,7 +79,7 @@ flowchart TD
     E -->|Aprovações Sequenciais| F[Workflows Flexíveis]
 ``` 
 
-## Cenários
+# Cenários
 
 ## Cenários Pré-Definidos
 
@@ -107,35 +110,9 @@ flowchart TD
 |                      |                                                             | TS02000145       | Liberação da lista de fornecedores de aquisição com adaptações       |
 
 
-## Configuração 
+## Configuração de um Cenário
 
 Seguiremos um exemplo de criação de um Workflow para Requisição de Compra.
-
-```mermaid
-flowchart TD
-    subgraph CFG[Configuração do Workflow Flexível]
-        A[Personalizar o Workflow] --> B[Criar Aprovadores]
-        B --> C[Opcional: Gerenciar Equipes e Responsabilidades]
-        C --> D[Opcional: Definir Usuários Responsáveis por Objetos Contábeis]
-        D --> E[Opcional: Definir Campos e Lógicas Personalizadas]
-        E --> F[Definir Workflows para Requisições de Compras]
-        F --> G[Opcional: Tradução de Conteúdo do Workflow]
-        G --> H[Opcional: Manter Modelos de E-mail]
-    end
-
-    subgraph TRP[Transporte Q2P]
-        I[Opcional: Transportar workflows do Sistema de Qualidade para Produção]
-    end
-
-    subgraph TBS[Resolução de Problemas]
-        J[Solucionar Erros de Workflow]
-        K[Atualização de Workflow (Atribuição de Papel)]
-    end
-
-    H --> I
-    I --> J
-    J --> K
-```
 
 **A construção de um caminho de aprovação começa no aplicativo Manage Workflows para Requisições de Compras**. Esse aplicativo permite criar um processo de aprovação composto por um ou mais workflows, cujo início é determinado pelas condições indicadas durante a criação dos processos subsequentes. É possível ativar, desativar e organizar os workflows individualmente e, assim, estabelecer a ordem em que serão executados.
 
@@ -143,36 +120,36 @@ flowchart TD
 
 Após clicar em Criar, o criador de workflows de documentos é aberto, sendo dividido em quatro seções:
 
-**a:** Cabeçalho – contém um campo para o nome do workflow.
+**a: Cabeçalho** – contém um campo para o nome do workflow.
 
-**b:** Propriedades – inclui um campo para uma descrição adicional do workflow, bem como os campos “válido de:” e “válido até:” para gerenciar o período de vigência do processo de aprovação. A variação na intensidade das compras ao longo do ano pode influenciar a necessidade de ajustes no processo. Se for esperado um grande volume de solicitações em um período específico, é possível envolver aprovadores adicionais no processo.
+**b: Propriedades** – inclui um campo para uma descrição adicional do workflow, bem como os campos “válido de:” e “válido até:” para gerenciar o período de vigência do processo de aprovação. A variação na intensidade das compras ao longo do ano pode influenciar a necessidade de ajustes no processo. Se for esperado um grande volume de solicitações em um período específico, é possível envolver aprovadores adicionais no processo.
 
-**c** Condições de início – esta seção permite adicionar condições que determinarão o início de um determinado workflow. O aplicativo padrão fornece quatro condições de início, que podem ser estendidas utilizando BADI – o processo de configuração está disponível no SAP Help Portal, na seção Opcional: Definir Campos e Lógicas Personalizadas (Optional: Define Custom Fields and Logic).
+**c Condições de início** – esta seção permite adicionar condições que determinarão o início de um determinado workflow. O aplicativo padrão fornece quatro condições de início, que podem ser estendidas utilizando BADI – o processo de configuração está disponível no SAP Help Portal, na seção Opcional: Definir Campos e Lógicas Personalizadas (Optional: Define Custom Fields and Logic).
 
-**d:** Etapas – uma seção que permite criar os próximos passos de aceitação ou revisão do documento.
+**d: Etapas** – uma seção que permite criar os próximos passos de aceitação ou revisão do documento.
 
 ### Criar Steps (Etapas)
 
 O criador de etapas, assim como o criador de workflow de documentos, é dividido em várias seções:
 
-**a:** Cabeçalho – uma seção onde especificamos o nome da etapa e seu tipo. Para aceitação, existem três tipos de etapas:
+**a: Cabeçalho** – uma seção onde especificamos o nome da etapa e seu tipo. Para aceitação, existem três tipos de etapas:
 
 - Liberação Automática do item PR – os destinatários são designados automaticamente,
 - Liberação do item PR – o usuário indica os destinatários, detalhes e condições da etapa,
 - Liberação do item PR Reenviável – a operação é similar ao tipo descrito acima. A vantagem significativa desta etapa é dar ao aprovador a capacidade de enviar a solicitação de volta ao solicitante. Neste caso, o solicitante terá um recurso adicional de Solicitar Retrabalho no aplicativo Fiori My Inbox.
 
-**b:** Propriedades da Etapa – esta seção contém dois campos opcionais:
+**b: Propriedades da Etapa** – esta seção contém dois campos opcionais:
 
 - Etapa Opcional – campo que indica se a etapa é opcional. Neste caso, se um aprovador não puder ser designado, o workflow do documento avança para a próxima etapa.
 - Excluir Agentes Restritos – usando este campo, podemos excluir indivíduos que criam ou submetem uma requisição do caminho de aprovação, para que o solicitante não possa ser também o aprovador da própria requisição. Além disso, o SAP permite submeter lógica customizada para exclusão de agentes utilizando BADI.
 
-**c:** Destinatários – nesta seção, determinamos os aprovadores de uma etapa específica. A aplicação permite escolher entre indicar destinatários exatos do documento ("Baseado em Usuário") ou indicar os papéis que determinam os destinatários ("Baseado em Papel"). O sistema também permite decidir se a aprovação de uma pessoa ou de todos os indivíduos designados será suficiente para completar a etapa.
+**c: Destinatários** – nesta seção, determinamos os aprovadores de uma etapa específica. A aplicação permite escolher entre indicar destinatários exatos do documento ("Baseado em Usuário") ou indicar os papéis que determinam os destinatários ("Baseado em Papel"). O sistema também permite decidir se a aprovação de uma pessoa ou de todos os indivíduos designados será suficiente para completar a etapa.
 
-**d:** Condições da Etapa – esta seção permite definir as condições que precisam ser atendidas para que as etapas individuais do workflow sejam acionadas.
+**d: Condições da Etapa** – esta seção permite definir as condições que precisam ser atendidas para que as etapas individuais do workflow sejam acionadas.
 
-**e:** Prazos – permite configurar a data final da etapa, após a qual um alerta será enviado ao destinatário caso o prazo seja ultrapassado.
+**e: Prazos** – permite configurar a data final da etapa, após a qual um alerta será enviado ao destinatário caso o prazo seja ultrapassado.
 
-**f:** Tratamento de Exceções – esta seção permite gerenciar uma requisição rejeitada. O sistema permite tanto encerrar o fluxo do documento quanto reenviar a demanda para revisão pelas pessoas designadas.
+**f: Tratamento de Exceções**  – esta seção permite gerenciar uma requisição rejeitada. O sistema permite tanto encerrar o fluxo do documento quanto reenviar a demanda para revisão pelas pessoas designadas.
 
 Podemos criar múltiplas etapas para cada workflow de documento com diversas condições de início e diferentes destinatários. As etapas são executadas de acordo com a ordem definida na seção de Etapas do criador de workflow.
 
