@@ -33,7 +33,7 @@ CALL FUNCTION 'SAP_WAPI_READ_CONTAINER'
 IF return_code = 0 AND it_all_objects[] IS NOT INITIAL.
 
   LOOP AT it_all_objects INTO lwa_reason
-                         WHERE element = '_ATTACH_OBJECTS'..
+                         WHERE element = '_ATTACH_OBJECTS'.
 
     document_id = lwa_reason-value.
   ENDLOOP.

@@ -1,26 +1,3 @@
-
-### Arquivar Workflow
-
- Simplificando, quando você *arquiva* um workflow, ele é removido da instância SAP e colocado offline (ou seja, em um arquivo no seu servidor de aplicativos). 
- 
- O workflow (e todos os seus itens de trabalho, anexos, histórico de logs etc.) ainda está disponível para acesso somente leitura, mas seus dados desaparecem de muitas tabelas grandes do banco de dados SAP. Isso deixa o pessoal do Basis muito feliz. 
- 
- O arquivamento ocorre em duas etapas distintas: gravando um workflow em um arquivo compactado e, em seguida, excluindo o workflow do sistema SAP. Observe que você só pode arquivar workflows com o status CONCLUÍDO (ou CANCELADO). 
- 
- Por que você faria isso? Você pode arquivar workflows se:
-
-- Seu sistema de produção está em execução há alguns anos
-
-- Suas tabelas críticas de fluxo de trabalho SAP (como SWWWIHEAD, SWNCNTP0) estão crescendo rapidamente, impactando o desempenho e tornando as tarefas básicas mais lentas
-(como backups do sistema)
-
-- Você está migrando para um novo sistema e deseja reduzir a quantidade de dados da tabela do banco de dados
-
-Os riscos são pequenos. Esse procedimento existe há anos e é (presumivelmente) usado rotineiramente por milhares de grandes clientes SAP. Você não "exclui" os workflows até que o processo de "gravação" seja concluído com sucesso. E sim, os workflows são fisicamente excluídos do sistema de produção, mas permanecem em arquivos.
-
-É claro que você precisa ter muito cuidado com esses arquivos; agora é responsabilidade da equipe do Basis mantê-los seguros e com backup adequado.
-
-
 ## Pulos do Gato
 
 SCC1 para transporte customizing de ativação de eventos
@@ -37,6 +14,9 @@ Transação rmps_set_substitute
 --> Dar um substituto a um usuário. Todos os conteúdos da SBWP serão passados.
  
 Loop Infinito + SM50 para debugar o método que acontece em background  
+
+Config Tarefas pro MY INBOX:
+Plataforma ABAP -> SAP Gateway Service Enablement -> Content -> Workflow Settings -> Atualizar nomes de tarefa e opções de decisão
 
 
 ## Transações
@@ -79,7 +59,7 @@ SWU2 – RFCs presas
 
 SMQA, SM58 – Erros de RFC
 
-SWI2_FREQ, SWI2_DIAG – Análise do Workitem 
+SWI2_FREQ, SWI2_DIAG, SWI2_ADM1 – Análise do Workitem 
 
 SWL1 – Customizing da SBWP
 
@@ -92,6 +72,10 @@ RSWWERRE –  Executar monitoramento de erros workflow
 SWW_SARA – Arquivar Workitems
 
 SWDD_SCENARIO, SWDD_SCENARIO_DISP – Workflow flexível
+
+SWF_PROCESS_ADMIN – Checar se Workflow Scenario está ativo
+
+SWETYPV – Type Linkages
 
 
 ## Funções WAPI
@@ -121,7 +105,10 @@ CALL FUNCTION 'SAP_WAPI_GET_WORKITEM_DETAIL'
 CALL FUNCTION 'SAP_WAPI_ATTACHMENT_ADD' 
 
 CALL FUNCTION 'SAP_WAPI_ATTACHMENT_DELETE'
+
+CALL FUNCTION 'SAP_WAPI_GET_WI_AGENTS'
 ```
+
 
 Exibir Log do WF
 ```
@@ -156,3 +143,5 @@ Apontamento Fiori para BADI - Transação Fiori /n/iwfnd/maint_service
 /IWPGW/BADI_TGW_TASK_DATA
 
 /IWWRK/ES_WF_WI_BEFORE_UPD_IB
+
+

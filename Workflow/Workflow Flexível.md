@@ -153,4 +153,47 @@ O criador de etapas, assim como o criador de workflow de documentos, é dividido
 
 Podemos criar múltiplas etapas para cada workflow de documento com diversas condições de início e diferentes destinatários. As etapas são executadas de acordo com a ordem definida na seção de Etapas do criador de workflow.
 
-Ativar o Workflow após salvar mudanças para rodar o fluxo.
+Gravar e ativar o fluxo.
+
+
+### Configurações de ativação
+
+Existem algumas etapas para ativar o workflow e deixá-lo pronto para uso:
+
+Os cenários não ficam visíveis no aplicativo Fiori Workflow Editor até que tenham sido ativados no sistema back-end.
+SAP NetWeaver > Application Server > Business Management > SAP Business Workflow > Flexible Workflow > Scenario Activation.
+Ative o WS00800238 WFL_for_PO Workflow for Purchase Order.
+
+Defina os tipos de documentos que serão usados no Flexible Workflow.
+Materials Management > Purchasing > Flexible Workflow for Purchase Orders > Activate Flexible Workflow for Purchase Orders.
+
+Mantenha as tarefas de workflow que precisam ser incluídas no filtro de tarefas, juntamente com seus nomes e chaves de decisão.
+SAP NetWeaver > SAP Gateway Service Enablement > Content > Workflow Settings > Maintain Task Names and Decision Options.
+
+There are several activities regarding authorizations you will need to perform in order to implement flexible workflow:
+
+1 - Regarding the technical user SAP_WFRT , you will need to provide it with full authorization as shown in 2852768 - Approval details not shown in Manage purchase orders for automatic workflow POs
+
+2 - In order to see the details of flexible workflow in my inbox, you will need to make sure that your approvers have authorization for the corresponding factsheets, both for business catalogs including the apps and also the backend objects. You can check KBA 2398026 - The detail information of purchasing items is not displayed in Fiori My Inbox for purchasing document approval to check the required objects.
+
+3 - In order to get users in Manage workflows people picker, you will also need to provide them with additional business roles, as explained in KBA 3287415.
+
+4 - Moreover, additional authorizations for workflows are required: 2667216 - There are currently no scenarios available in Manage workflows.
+
+5 - Also, note that you will need to create the users as employees: 2869055 - No users available in People Picker (when HR module active).
+
+6 - Finally, please, check the following KBAs for the different objects:
+2748599 - "User XXXXXX for step 'ReleasePO' does not exist\" or user is not available in People Picker in Manage Workflows for Purchase Order
+3287415 - Users not available in Manage Workflow for Purchase Requisitions.
+3214647 - Item Details are missing for Purchase Order or Purchase Requisitions in My Inbox App
+
+
+Transporte de ativação de cenário 
+
+Start transaction SM31.
+
+Open view V_SWF_FLEX_SCACT in edit mode.
+
+Select the scenarios you want to transport, and then choose the Transport of scenario content button.
+
+Transport the scenarios the same way as any other objects using CTS transport (transaction SE03).

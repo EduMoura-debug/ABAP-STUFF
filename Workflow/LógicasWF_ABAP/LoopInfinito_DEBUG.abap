@@ -35,3 +35,13 @@ IF lc_ativo = abap_true.
   WHILE a IS INITIAL.
   ENDWHILE.
 ENDIF.
+
+
+    DATA: v_wi    TYPE sww_wiid,
+          lv_container          TYPE REF TO if_swf_ifs_parameter_container,
+
+    DATA: lc_active TYPE ztb_wf_debug-active.
+
+    v_wi = im_workitem_context->get_workitem_id( ).
+
+    lv_container = io_context->get_workflow_container( ).
