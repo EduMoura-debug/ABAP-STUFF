@@ -52,7 +52,7 @@ Workflows criados no ambiente on-premise via SAPGUI (transações clássicas com
 | --- | --- | --- |
 | Disponibilidade | SAP ERP, SAP S/4HANA | SAP S/4HANA |
 | Configurado pelo app Manage Workflows | Não | Sim |
-| Itens de trabalho | Sim | Sim |
+| Workitems | Sim | Sim |
 | Integração com My Inbox | Sim | Sim |
 | Tipo de processo suportado | Sequencial/paralelo | Sequencial |
 | Workflows ad hoc | Não | Sim, no módulo de gestão do ciclo de vida do produto (PLM) para workflows flexíveis |

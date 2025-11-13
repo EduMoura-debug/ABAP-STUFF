@@ -22,7 +22,8 @@ DATA: ls_decision_note         TYPE SWRSOBJID.
          ls_decision_note = ls_note_object.
        ENDIF.
      ENDIF.
- *   execute work item
+
+ * execute work item
      CLEAR lt_message_tab[].
      CLEAR l_rc.
      CALL FUNCTION 'SAP_WAPI_DECISION_COMPLETE'

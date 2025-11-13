@@ -1,6 +1,6 @@
 # Workflow Overview
 
-SAP Business Workflow é uma ferramenta utilizada para integrar as funcionalidades e complementar o entendimento dos processos do sistema ECC. 
+SAP Business Workflow é uma ferramenta utilizada para integrar as funcionalidades e complementar o entendimento dos processos do sistema SAP. 
 
 O Workflow pode ser utilizado para auxiliar no andamento de processos, devido à possibilidade de combinar atividades de diferentes aplicações dentro de um mesmo processo. As informações necessárias são encaminhadas diretamente para o usuário final facilitando a execução de suas Tarefas.
 
@@ -56,3 +56,39 @@ Os riscos são pequenos. Esse procedimento existe há anos e é (presumivelmente
 
 É claro que você precisa ter muito cuidado com esses arquivos; agora é responsabilidade da equipe do Basis mantê-los seguros e com backup adequado.
 
+## Transações SAP Workflow (Organizadas e Traduzidas)
+
+| Código (T-Code) | Tradução da Função | Categoria Principal |
+| :--- | :--- | :--- |
+| **SWDD** | **Builder de Workflow** (Criação e Modificação de Modelos) | Design e Build |
+| **PFTC** | **Manutenção de Tarefas** (Workflow Tasks, Tipos de Tarefa e Tasks Padrão) | Design e Build |
+| **PFAC** | **Manutenção de Regras** (Definição de Agentes/Executores) | Design e Build |
+| **SWDA** | Builder de Workflow Alfanumérico | Design e Build |
+| **SWO1** | **Builder de Business Object (BOR)** | BOR |
+| **SWO2** | Browser / Display do Business Object Repository (BOR) | BOR |
+| **SWU3** | **Customizing Automático do Workflow** / Configurações RFC | Configuração |
+| **SWFC** | Customizing Automático do Workflow (Alternativo) | Configuração |
+| **SWUG** | Gerar Transação de Início de Workflow | Configuração |
+| **SWEC** | **Vinculação de Eventos para Documentos de Modificação** (*Change Documents*) | Eventos e Vinculação |
+| **SWE2** / **SWETYPV** | **Exibir/Manter Vinculações de Tipo de Evento** | Eventos e Vinculação |
+| **SWEL** | **Exibir Rastreio de Eventos** | Rastreio e Log |
+| **SWELS** | Ligar/Desligar Rastreio de Eventos | Rastreio e Log |
+| **SWEM** | Configurar Rastreio de Eventos | Rastreio e Log |
+| **SWU0** | Simular Evento | Teste e Execução |
+| **SWUE** | **Disparar um Evento** | Teste e Execução |
+| **SWUS** | **Testar Workflow** | Teste e Execução |
+| **SWU4** / **SWU5** / **SWU6** / **SWU7** | Testes de Consistência (Task Padrão, Cliente, Workflow, Template) | Teste e Execução |
+| **SWDM** | **Workflow Explorer** (Explorador de Modelos) | Administração e Monitoramento |
+| **SWI1** | **Relatório de Seleção para Workflows** | Administração e Monitoramento |
+| **SWI5** / **SWI5N** | **Análise da Carga de Trabalho** (Inbox do Usuário) | Administração e Monitoramento |
+| **SWIA** | **Relatório de Administração de Work Item** (Processar como Admin) | Administração e Monitoramento |
+| **SWPR** | **Reiniciar Workflow após Erro** | Administração e Monitoramento |
+| **SWPC** | Reiniciar Workflow após Crash no Sistema | Administração e Monitoramento |
+| **SWWL** | **Eliminar Work Item** / Workflow | Administração e Monitoramento |
+| **RSWWERRE** | Executar Monitoramento de Erros do Workflow | Administração e Monitoramento |
+| **SWEQADM** | Administrar Fila de Eventos | Administração e Monitoramento |
+| **SWU1** / **SWU2** | Monitor de RFC do Usuário / Monitor de RFC do Workflow | Monitoramento Técnico |
+| **SWU_OBUF** | Sincronização do Buffer (do BOR) | Utilitários |
+| **SWL1** | Configurações para Colunas Dinâmicas (SBWP) | Utilitários |
+| **SWDD_SCENARIO** | Workflow Flexível (Criação/Exibição de Cenários - S/4HANA) | S/4HANA Flex WF |
+| **SWF_PROCESS_ADMIN** | Checar se o Cenário de Workflow está ativo | S/4HANA Flex WF |

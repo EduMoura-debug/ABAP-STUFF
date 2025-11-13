@@ -1530,7 +1530,396 @@ O modelo de programação baseado em CDS do SAP S/4HANA e da SAP Business Techno
 - Desenvolvimento simplificado e alta consistência nos serviços OData oferecidos por meio do desenvolvimento orientado a modelos com base em um modelo de dados unificado.
 - Flexibilidade ao usar opcionalmente a lógica ABAP implementada, se necessário
 
+### Determination Field Label ( Rótulo dos campos )
 
+Cada campo de dados em uma tabela ou visualização ou entidade CDS precisa não apenas de um nome de campo, mas também de uma descrição no idioma do usuário.
+
+Nomes de campos técnicos em entidades CDS devem ser compreensíveis, mas não expressos apenas em um idioma.
+
+Rótulos de campo, no entanto, devem ser traduzidos para muitos idiomas. Eles fornecem informações semânticas importantes.
+
+Poder ser definidos de diversas maneiras:
+- Diretamente no UI
+- Derivados de um elemento de dados
+- Tipo simples CDS
+- Por meio de anotação *@EndUserText.label: '<fieldlabel>'*
+
+### Length of Field Label 
+
+Para campos em visualizações CDS, no entanto, apenas três variantes de texto estão disponíveis, que correspondem aos rótulos possíveis para propriedades em serviços:
+- Um rótulo de campo     *@EndUserText.label*
+- Descrição curta        *@EndUserText.quickInfo*
+- Título de coluna       *@EndUserText.heading*
+
+Seleção de rótulos de campo para elemento de dados é mais complexa. Mapeamento é claro, mas díficil escolha entre os textos Curto, Médio e Longo. Qual utilizar pro rótulo?
+
+Em versões anteriores, o texto médio era sempre escolhido. A lógica foi adaptada no S/4HANA e agora o rótulo é o texto Longo.
+
+Quando 20 caracteres é um comprimento curto para texto, podemos resolver:
+- Anotando o campo diretamente na CDS
+- Usando um elemento de dados sem textos Curto e Médio.
+- Usando uma CDS simples 
+
+### Quantities and Amounts
+
+Identificar campos de quantidade e moeda. Isso permite o processamento automatizado pela indraestrutura ABAP.
+
+Cada campo de valor tem um campo de moeda e cada campo de quantidade tem um campo de unidade.
+
+- Campo de unidade: *@Semantics.unitOfMeasure: true*
+- Campo de quantidade: *@Semantics..quantity.unitOfMeasure: '<campo de unidade>'*
+- Campo de moeda: *@Semantics.currencyCode: true*
+- Campo de valor: *@Semantics.amount.currencyCode: '<campo de moeda>'*
+
+### Aggregation Behaviour
+
+Agregação = Unir colunas
+
+SQL SELECT de entidades CDS pode especificar explicitamente a agregação desejada de um campo de dados.
+
+Campos númericos podem ter a agregação executada como soma um cálculo (média, por exemplo). Campos classificáveis podem ter um máximo e um mínimo. Quaisquer campos de valores diferentes podem ser contados como uma agregação.
+
+Duas variantes para especificar agregação padrão:
+- Obsoleta: @DefaultAggregation
+- @Aggregation.default
+
+| Tipo de Agregação | Descrição                                                                 |
+|--------------------|---------------------------------------------------------------------------|
+| #AVG               | Cálculo de média: soma de todos os valores dividida pelo número de valores |
+| #COUNT_DISTINCT    | Número de valores distintos                                                |
+| #FORMULA           | Forma especial para consultas analíticas (veja Capítulo 10, Seção 10.3.4 para mais detalhes) |
+| #MAX               | Máximo de todos os valores                                                 |
+| #MIN               | Mínimo de todos os valores                                                 |
+| #NONE              | Nenhuma agregação padrão                                                   |
+| #SUM               | Soma de todos os valores                                                   |
+
+```java
+@DefaultAggregation: #SUM
+Quantity,
+@Aggregation.default: #SUM //Clientes mais novos
+NetAmount,
+```
+
+### System Times
+
+| Anotação                                      | Semântica do Campo                                                                                                    |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| @Semantics.systemDateTime.createdAt           | Momento da criação (tipo ABAP TIMESTAMP ou TIMESTAMPL)                                                                |
+| @Semantics.systemDateTime.lastChangedAt       | Momento da última modificação (tipo ABAP TIMESTAMP ou TIMESTAMPL)                                                     |
+| @Semantics.systemDate.createdAt               | Data de criação (tipo ABAP DATS)                                                                                      |
+| @Semantics.systemDate.lastChangedAt           | Data da última modificação (tipo ABAP DATS)                                                                           |
+| @Semantics.systemTime.createdAt               | Hora da criação (tipo ABAP TIMS); razoável apenas em combinação com uma data de criação                               |
+| @Semantics.systemTime.lastChangedAt           | Hora da última modificação (tipo ABAP TIMS); razoável apenas em combinação com uma data da última modificação          |
+
+```java
+@Semantics.systemDate.createdAt 
+CreattionDate,
+@Semantics.systemTime.createdAt 
+CreationTime,
+@Semantics.systemDate.lastChangedAt
+LastChangeDate,
+@Semantics.systemDateTime.lastChangedAt
+LastChangeDateTime,  
+```
+
+### Text And Languages 
+
+Textos em linguagem natural devem ser distinguíveis de código e outras informações técnicas. Para isso, a anotação ***@Semantisc.text*** está disponível.
+
+Se o idioma for fornecido em outro campo de uma visualização, esse campo será anotado com ***@Semantics.language***
+
+```java
+@semantics.language
+key spras as Language,
+@Semantics.text: true
+cast(landx50 as fis_landx50 preserving type ) as CountryName,
+```
+
+### Information For The Fiscal Year
+
+Anotações do CDS também expressam semântica específica. Um exemplo, são as informações do ano fiscal.
+
+| Anotação                                | Semântica do Campo                                                                 |
+|-----------------------------------------|------------------------------------------------------------------------------------|
+| @Semantics.fiscal.yearVariant           | Variante do ano fiscal; define as propriedades do ano fiscal                       |
+| @Semantics.fiscal.period                | Período fiscal representado por três dígitos                                       |
+| @Semantics.fiscal.year                  | Ano fiscal representado por quatro dígitos                                         |
+| @Semantics.fiscal.yearPeriod            | Período do ano fiscal; combinação do ano fiscal e do período                       |
+| @Semantics.fiscal.quarter               | Trimestre fiscal representado por um dígito                                        |
+| @Semantics.fiscal.yearQuarter           | Combinação do ano fiscal e do trimestre                                            |
+| @Semantics.fiscal.week                  | Semana fiscal representada por dois dígitos                                        |
+| @Semantics.fiscal.yearWeek              | Combinação do ano fiscal e da semana                                               |
+| @Semantics.fiscal.dayOfYear             | Número do dia dentro de um ano fiscal                                              |
+
+Isso pode ser observado na CDS standard I_JornalEntryItem (CDS documento fiscal).
+```java
+@Semantics.fiscal.year: true
+I_GLAccountLineItemRawData.LedgerFiscalYear,
+@Semantics.fiscal.period: true
+I_GLAccountLineItemRawData.FiscalPeriod,
+@Semantics.fiscal.yearVariant: true
+I_GLAccountLineItemRawData.FiscalYearVariant,
+@Semantics.fiscal.yearPeriod: true
+I_GLAccountLineItemRawData.FiscalYearPeriod,
+```
+
+### Foreign Key Relations
+
+Relações entre chaves estrangeiras busca restringir os valores possíveis para um campo de dados de uma tabela de chaves estrangeiras aos valores disponíveis de um campo de chaves em uma tabela de verificação.
+
+Consistência de dados para que não haja repetição de dados.
+
+Relações de chave estrangeira também podem existir entre entidades CDS. Feita e organizada via associação.
+
+```java
+define view I_country as select from t005
+{
+  key land1 as Country
+  ...
+}
+
+define view I_ProfitCenter as select distinct from cepc
+associtation[0..1] to I_Country as _Country
+  on $projection.Country = _Country.Country
+  { 
+    ...
+    ladn1 as Country,
+    ...
+  }
+```
+
+A definição da associação ainda não estabelece relação de uma chave estrangeira. Seu caracter e identificação são definidos pela anotação ***ObjectModel.foreignKey.association***.
+
+```java
+define view I_ProfitCenter as select distinct from cepc
+associtation[0..1] to I_Country as _Country
+  on $projection.Country = _Country.Country
+  { 
+    ...
+    ObjectModel.foreignKey.association: '_Country'
+    ladn1 as Country,
+    ...
+  }
+```
+
+A cardinalidade de uma associação de chave estrangeira deve ser [0..1] ou [1..1].
+
+### Text Relations
+
+Conexão entre um campo ID e um campo de texto. Exemplo, ID do cliente e o nome do cliente.
+
+CDS suporta duas variantes de relações de texto: dentro de uma visualização ou entidade do CDS, ou entre dois modelos diferentes.
+
+Ambas variantes são baseadas em anotações.
+-***@ObjectModel.text.element*** quando é dentro da mesma entidade
+-***@ObjectModel.text.element*** quando é de outra entidade
+
+```java
+define view I_Bank as select from bnka
+{
+    @ObjectModel.foreignKey.association: '_Country'
+    banks as BankCountry,
+    @ObjectModel.text.element: [ 'BankName' ]
+    key bankl as BankInternalID,
+    @Semantics.text: true
+    banka as BankName,
+    ...
+}
+```
+
+```java
+@ObjectModel.dataCategory: #TEXT
+@ObjectModel.representativeKey: 'Country'
+define view I_CountryText as select from t005t
+{
+    key land1 as Country,
+    @Semantics.language: true
+    key spras as Language,
+    @Semantics.text: true
+    landx50 as CountryName,
+    ...
+}
+
+define view I_Country as select from t005
+    association [0..*] to I_CountryText as _Text
+        on $projection.Country = _Text.Country
+{
+    @ObjectModel.text.association: '_Text'
+    key land1 as Country,
+    ...
+}
+```
+
+### Composition Relations
+
+*Importante! Relacionamento de composição. Criando relações complexas entre CDS.*
+
+No modelo de dados, queremos expressar quais entidades CDS pertencem juntas e formam uma composição bem definida, um objeto ou objeto de negócios.
+
+As entidades ou visualizações CDS que contribuem para um objeto (de negócios) são chamadas de nós de objeto ou nós de objeto de negócios.
+
+Para esse propósito, são introduzidas relações de composição que colocam os nós de objeto em relações hierárquicas pai-filho.
+
+Um nó pode ter no máximo um nó pai superordenado, mas qualquer número de nós filhos subordinados.
+
+Uma relação de composição implica uma dependência existencial, o que significa que uma linha de dados em um nó filho só pode ser criada se uma linha relacionada em seu nó pai existir, e a exclusão de uma linha de dados no nó pai força a exclusão de todas as linhas relacionadas em nós filhos.
+
+Para cada objeto, um nó é marcado como um nó raiz.
+
+Este é o único nó no objeto sem um nó pai.
+
+No objeto de pedido de vendas, por exemplo, a visualização CDS I_SalesOrder para os dados do cabeçalho do pedido é o nó raiz.
+
+Um objeto pode ser identificado por seu nó raiz.
+
+As relações de composição entre nós são definidas como de costume por associações das entidades CDS.
+
+A anotação ***@ObjectModel.association.type*** atribui um tipo às associações que as marca como associações de composição.
+
+Três tipos de associações de composição são distinguidos:
+
+**#TO_COMPOSITION_PARENT** A associação aponta para o nó pai.
+
+**#TO_COMPOSITION_CHILD** A associação aponta para um nó filho.
+
+**#TO_COMPOSITION_ROOT** A associação aponta para o nó raiz do objeto.
+
+Uma associação pode ter simultaneamente os tipos **#TO_COMPOSITION_PARENT** e **#TO_COMPOSITION_ROOT**.
+
+O nó raiz é identificado pela anotação ***@ObjectModel.compositionRoot: true***.
+
+
+## Virual Data Model
+
+O modelo de dados virtual (VDM) do SAP S/4HANA expõe os dados junto com sua semântica empresarial em um formato compreensível e diretamente utilizável.
+
+Ele é usado em vez do acesso direto às tabelas de banco de dados.
+
+As estruturas de dados e a terminologia do VDM são mantidas principalmente em interfaces de serviço externas, aplicativos SAP Fiori e interfaces de dados.
+
+A VDM forma o modelo de dados central para dados de aplicativos.
+
+Ele é usado por aplicativos transacionais e analíticos, bem como APIs de serviços e dados, reforçando assim a consistência e facilitando a combinação de diferentes aplicativos e APIs.
+
+A definição de modelos específicos para esses aplicativos ou APIs não é necessária, ou pelo menos é bastante simplificada, reutilizando a VDM.
+
+No entanto, as diretrizes para VDM têm outros alvos:
+- Compreensão intuitiva de estruturas de dados de uma perspectiva de negócios, nomes consistentes, homogeneidade do modelo abrangente
+- Evitar redundâncias e desenvolvimentos duplicados.
+
+Isso torna a VDM uma base ideal para seus próprios desenvolvimentos e extensões.
+
+Você não precisa começar no nível mais baixo de tabelas de banco de dados e pode aproveitar as visualizações da VDM para criar suas próprias visualizações personalizadas.
+
+Você se beneficia da VDM orientado a negócios e pode desenvolver rapidamente APIs personalizadas e aplicativos transacionais ou analíticos em suas visualizações personalizadas.
+
+Ao usar entidades CDS, você deve considerar o ciclo de vida das visualizações e elementos do CDS para se beneficiar da compatibilidade entre versões de software das visualizações CDS lançadas.
+
+O desenvolvimento do VDM coloca os seguintes aspectos em foco:
+- As visualizações da VDM são compreensíveis de uma perspectiva comercial não técnica. Elas são aprimoradas com semântica adicional, por exemplo, a relação com outras visualizações do VDM.
+- A maior parte das visualizações da VDM devem ser reutilizadas por outras equipes de desenvolvimento e, após liberá-las, por clientes e parceiros.
+- A VDM implementada pela CDS é o modelo líder para SAP S/4HANA; outros modelos de dados são derivados dele, por exemplo, modelos analíticos ou OData.
+- As visualizações da VDM são executadas diretamente pelo banco de dados SAP HANA e se beneficiam de seus múltiplos recursos e velocidade.
+- As visualizações da VDM são usadas para o desenvolvimento de todos os novos aplicativos padrão SAP no SAP S/4HANA.
+- As visualizações da VDM são baseadas na CDS e aproveitam a infraestrutura ABAP robusta.
+
+### SAP Object Types and Nodes
+
+Os tipos de objeto SAP e os tipos de nó de objeto SAP contêm muito pouca informação.
+
+Sua tarefa essencial é representar um objeto relacionado a negócios ao qual outras entidades ou objetos de desenvolvimento estão relacionados.
+
+Os tipos de objeto SAP e os tipos de nó de objeto são definidos no ABAP Development Tools (ADT) como SAP Object Type e SAP Object Node Type.
+
+O atributo Object Type Code de um tipo de objeto SAP é uma chave alternativa numérica que pode ser usada para identificar o tipo de objeto SAP em integrações entre sistemas ou serviços de nuvem.
+
+O atributo Type Category especifica uma categoria de um tipo de objeto SAP.
+
+| Type Category | Description |
+| :--- | :--- |
+| **Business Object** | Real-world object with business relevance |
+| **Technical Object** | Object without business semantics |
+| **Analytical Object** | Object with business relevance that is combined with other data to create new quality of information |
+| **Configuration Object** | Object of business configuration or a code list |
+| **Dependent Object** | Object that only exists as part of other business objects and is shared by these other objects |
+
+Cada tipo de objeto SAP tem um tipo de nó de objeto SAP, geralmente com o mesmo nome, que representa os dados de cabeçalho do objeto.
+
+Este nó raiz é identificado pela caixa de seleção Root Node Flag.
+
+Uma entidade CDS pode ser atribuída a um tipo de nó de objeto SAP pela anotação ***@ObjectModel.sapObjectNodeType.name*** e, portanto, também a um tipo de objeto SAP.
+
+Várias entidades CDS com diferentes propósitos podem ser atribuídas ao mesmo tipo de nó de objeto SAP.
+
+As entidades CDS anotadas fornecem informações ricas para o tipo de nó de objeto: campos de dados, associações e outras anotações.
+
+Das associações de entidades CDS, até mesmo as relações entre os tipos de nó de objeto SAP e os tipos de objeto podem ser derivadas.
+
+### Basic Interface View
+
+### Composite Interface View
+
+### Comsumption Interface View
+
+## Modeling Analytical App
+
+### Analytics in SAP S/4Hana
+
+
+## Modeling Transactional App
+
+
+## Diretrizes de Nomenclatura de Campos e Associações (CDS/VDM)
+
+### 1. Regras Gerais e Abreviaturas
+* **Limite de Caracteres:** Nomes de campo no CDS são limitados a **30 caracteres**.
+* **Abreviações:** Devem ser usadas para temas complexos e precisam ser **padronizadas** (ex: `Qty` sempre significa `Quantity`).
+
+| Suffix | Description |
+| :--- | :--- |
+| <Name>Text | Language-dependent text |
+| <Name>Cube | Analytical cube view |
+| <Name>Query | Analytical query |
+| <Name>ValueHelp | Value help |
+
+### 2. Tipos Específicos de Campos
+
+| Tipo de Campo | Regra de Nomenclatura | Exemplo |
+| :--- | :--- | :--- |
+| **Códigos (Valores Fixos)** | O sufixo `Code` pode ser omitido. Qualificadores são usados para clareza semântica. | `CompanyCurrency`, `CountryISOCode` |
+| **Indicadores (Booleanos)** | Devem ser uma declaração lógica usando prefixos como `Is` ou `Has`. | `OrderIsReleased`, `NotificationHasLongText` |
+| **Valores (Moeda e Quantidade)** | Podem incluir a referência da unidade no nome, mas frequentemente é omitida se expressa por anotações. | `NetAmountInDisplayCurrency`, `TaxAmount`, `OrderQuantity` |
+| **Contadores** | Use o prefixo `NumberOf`. | `NumberOfRecipients` |
+| **Duração** | Se não houver campo de unidade relacionado, inclua a unidade no nome. | `TripDurationInDays` |
+| **Taxas e Proporções** | Porcentagem e fração são proibidas. Use combinações específicas. | `ConditionRateInPercent`, `ExchangeRate`, `ProbabilityRatio` |
+| **Data e Hora** | Use sufixos específicos dependendo da granularidade. | `CreationDateTime`, `CreationDate`, `CreationTime` |
+
+### 3. Nomenclatura de Parâmetros (VDM)
+* **Formato:** Começa com o prefixo **`P_`** seguido por um nome semântico que segue as regras de nome de campo.
+* **Exemplo:** `P_DisplayCurrency`
+
+### 4. Nomenclatura de Associações (VDM)
+* **Regra Geral:** Começa com **`_`**. A primeira letra da visualização de destino é geralmente omitida.
+* **Associação Entidade-Texto:** Geralmente chamada **`_Text`**.
+* **Exemplos:**
+    * `_Customer` (aponta para `I_Customer`)
+    * `_Item` (aponta para `I_SalesOrderItem`)
+
+### 5. Interfaces e Views (CDS)
+
+| **Type** | **Naming Convention** | **Identification** |
+| :--- | :--- | :--- |
+| Basic interface view | I_* | @VDM.viewType: #BASIC |
+| Composite interface view | I_* | @VDM.viewType: #COMPOSITE |
+| Consumption view | C_* | @VDM.viewType: #CONSUMPTION |
+| Restricted reuse view | R_* | @VDM.lifecycle.contract.type: #SAP_INTERNAL_API |
+| Transactional object view | R_*TP | @VDM.viewType: #TRANSACTIONAL, @VDM.lifecycle.contract.type: #SAP_INTERNAL_API |
+| Transactional interface view | I_*TP | @VDM.viewType: #TRANSACTIONAL, @VDM.lifecycle.contract.type: #PUBLIC_LOCAL_API |
+| Transactional consumption view | C_*TP | @VDM.viewType: #CONSUMPTION, @VDM.usage.type: [#TRANSACTIONAL_PROCESSING_SERVICE] |
+| Remote API view | A_* | @VDM.lifecycle.contract.type: #PUBLIC_REMOTE_API |
+| Private VDM view | P_* | @VDM.private: true |
+| Extension include view | E_* | @VDM.viewType: #EXTENSION |
+| VDM view extension | X_* | @VDM.viewExtension: true |
 
 ## Boas Práticas
 
@@ -1546,11 +1935,9 @@ Use CDS Views apenas como modelos de dados e separar a lógica de negócios corr
 
 Para cada tabela de banco de dados, deve ser criada uma visualização de base de dados ou uma função de tabela correspondente à Visualização Básica do CDS. Essas vistas descrevem nomes significativos para campos de tabelas de banco de dados, adicionam associações e anotações específicas de dados.
 
-Por exemplo, uma vista `I_Material` para a tabela `MARA`.
+Por exemplo, uma view `I_Material` para a tabela `MARA`.
 
 Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.
-
-
 
 
 ## Atalhos Eclipse 
