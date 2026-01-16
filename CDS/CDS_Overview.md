@@ -6,11 +6,11 @@ Os modelos de CDS compreendem as definições de várias tipos de entidades CDS,
 
 Existem diferentes tipos de modelos de visualização CDS
 
-### Views (Também conhecidas como visualizações V1):
+### Views (Também conhecidas como visualizações V1)
 
-• Representam os modelos de visualização CDS originais. 
+• Representam os modelos de visualização CDS originais.
 
-### Entity Views (Também conhecidas como visualizações V2):
+### Entity Views (Também conhecidas como visualizações V2)
 
 • Representam o sucessor das visualizações V1. Mais possibilidades.
 • Em comparação com as visualizações V1, as visualizações V2 não geram uma visualização adicional do ABAP Data Dictionary em sua ação.
@@ -18,12 +18,12 @@ Existem diferentes tipos de modelos de visualização CDS
 desempenho geral de ativação.
 • Além disso, as visões V2 reforçam mais a modelagem homogênea e aplica verificações de sintaxe mais rigorosas.
 
-### Projection Views:
+### Projection Views
 
-• Representam uma especialização das entidades de visualização. Seu principal objetivo é a definição de interfaces em seus modelos de CDS subjacentes com um mapeamento modelado da funcionalidade correspondente. Como resultado, as visualizações de projeção restringem a funcionalidade geral das entidades de visualização a meros recursos de projeção. 
+• Representam uma especialização das entidades de visualização. Seu principal objetivo é a definição de interfaces em seus modelos de CDS subjacentes com um mapeamento modelado da funcionalidade correspondente. Como resultado, as visualizações de projeção restringem a funcionalidade geral das entidades de visualização a meros recursos de projeção.
 • Projeção de uma entidade, de uma composite. Limita a um objeto final, sendo a última camada para expansão de Annottations.
 
-### Transient Views (às vezes também referidas como visualizações V3):
+### Transient Views (às vezes também referidas como visualizações V3)
 
 • Definem entidades de visualização CDS sem uma representação direta no sistema de banco de dados SAP HANA.
 • Eles atuam como meros modelos de visualização declarativos cujo comportamento em tempo de execução é governado e implementado por componentes de infraestrutura, como o mecanismo analítico.
@@ -81,7 +81,7 @@ group by
 
 ### Campos Chave (Key Fields)
 
-Os campos de visualização do CDS são definidos como campos-chave, adicionando a chave de elemento de sintaxe anterior aos campos. 
+Os campos de visualização do CDS são definidos como campos-chave, adicionando a chave de elemento de sintaxe anterior aos campos.
 
 Em geral, uma chave do modelo CDS pode ser composta de vários campos chaves. Estes devem ser colocados antes dos campos-não-chave na lista de projeção de visualização do CDS. Além disso, key fields podem ser usados para verificações de consistência (cardinalidade, associações).
 
@@ -158,9 +158,9 @@ cast(
 
 ```
 
-### Varíaveis de sessão 
+### Varíaveis de sessão
 
-Informações da sessão de tempo de execução da CDS. Funciona como o "sy" do abap clássico. 
+Informações da sessão de tempo de execução da CDS. Funciona como o "sy" do abap clássico.
 
 *$session.client*
 *$session.system_date*
@@ -245,11 +245,11 @@ Esses dois comandos são usados para definir interseções e exceções entre du
 
 **Intersect**: Identificar registros que são comuns a duas fontes de dados distintas. Utilizada para obter a interseção das fontes.
 
-**Except**: Identificar registros que estão presentes apenas em uma das duas fontes de dados. Utilizada para excluir registros de uma fonte de dados que estão presentes em uma fonte. 
+**Except**: Identificar registros que estão presentes apenas em uma das duas fontes de dados. Utilizada para excluir registros de uma fonte de dados que estão presentes em uma fonte.
 
 ### Joins
 
-Joins permitem modelar links condicionais entre duas fontes de dados. Suas condições descrevem os critérios para vincular um registro de dados da fonte de dados secundária. 
+Joins permitem modelar links condicionais entre duas fontes de dados. Suas condições descrevem os critérios para vincular um registro de dados da fonte de dados secundária.
 
 **Left Outer Joins**:
   Relacionam registros de uma fonte de dados primária com registros de uma fonte de dados secundária.
@@ -264,10 +264,11 @@ Joins permitem modelar links condicionais entre duas fontes de dados. Suas condi
   O resultado contém apenas os registros da fonte primária que têm pelo menos um parceiro na fonte secundária.
 
 **Cross Joins**:
-  Combinam todos os registros de uma fonte de dados primária com todos os registros de uma fonte de dados secundária. 
+  Combinam todos os registros de uma fonte de dados primária com todos os registros de uma fonte de dados secundária.
+
   O número de registros no resultado é igual ao número de registros da fonte primária multiplicado pelo número de registros da fonte secundária.
 
-### Funções de Agregação SQL 
+### Funções de Agregação SQL
 
 Permitem realizar cálculos de agregados predefinidos de forma eficiente no banco de dados.
 
@@ -318,8 +319,11 @@ O agrupamento é feito por Field1, ou seja, todos os cálculos acima são feitos
 ### Campos de projeção (Porjection Fields)
 
 Definidos na lista de seleção de uma CDS. Dentro da definição de visualização da CDS, você pode acessar esses campos prefixando seus nomes com o operador:
+
 ```java
+
 $projection.NomeCampo
+
 ```
 
 Você pode usar campos de projeção para se referir aos resultados de cálculos definidos na view. Podemos usar campos de projeção também para definir associações.
@@ -365,7 +369,7 @@ currency  as Currency,
 }
 ```
 
-#### Funções de conversão para campos de moeda e unidade 
+#### Funções de conversão para campos de moeda e unidade
 
 ```java
 define view entity Z_ViewWithUnitConversions
@@ -426,7 +430,7 @@ Em termos de conteúdo, os contratos correspondem aos padrões de modelagem capt
 
 Interfaces Transacionais - Destinadas a servir como interface pública estável. Lançadas sobre um contrato de lançamento.
 
-Query Transacional - Mais comum. Consultas transacionais CDS são destinadas a modelar a camada de projeção de um objeto de negócios RAP no contexto do ABAP RAP. Representam a camada mais alta de um modelo de dados CDS e têm o propósito de preparar os dados para um caso de uso específico. 
+Query Transacional - Mais comum. Consultas transacionais CDS são destinadas a modelar a camada de projeção de um objeto de negócios RAP no contexto do ABAP RAP. Representam a camada mais alta de um modelo de dados CDS e têm o propósito de preparar os dados para um caso de uso específico.
 
 Query Analítica - Modelagem de consultas analíticas dentro do modelo de dados CDS. Entidade projetada deve ser uma visualização de cubo analítico. Recursos são restritos aos mecanimos analíticos.
 
@@ -440,7 +444,7 @@ Administração de buffers pode implicar em uma sobrecarga significativa e impac
 
 **Criar um buffer**: Selecionar a CDS; *New Entity Buffer* pelo menu de contexto; Insira as informações solicitadas na caixa de diálogo; e confirme a criação.
 
-A definição e aplicação do buffer estará sempre alinhada com as seleções de dados reais. Por um lado, buffers podem restringir a evolução futura de uma visão CDS. Por outro, é preciso entender que nem todas as seleções podem ser executadas em servidor ABAP. 
+A definição e aplicação do buffer estará sempre alinhada com as seleções de dados reais. Por um lado, buffers podem restringir a evolução futura de uma visão CDS. Por outro, é preciso entender que nem todas as seleções podem ser executadas em servidor ABAP.
 
 ## 4 - Associations
 
@@ -479,9 +483,7 @@ Existem duas alternativas para especificar a cardinalidade de uma associação:
 | OF MANY TO MANY     | 0                             | Unlimited                 | 0                             | Unlimited                 |
 | OF MANY TO ONE      | 0                             | Unlimited                 | 0                             | 1                         |
 | OF MANY TO EXACT ONE| 0                             | Unlimited                 | 1                             | 1                         |
-| Not specified (default logic) | 0                         | Unlimited                 | 0                             | 1                     |
-
-
+| Not specified       | 0                             | Unlimited                 | 0                             | 1                         |
 
 ### Expose Associations
 
@@ -604,7 +606,7 @@ define view entity Z_ViewWithPathExpressions
 
 Se os campos forem adicionados usando expressões de path, as condições definidas nas definições de associação serão implicitamente convertidas em JOINs.
 
-Consequentemente, as duas expressões de caminho, _SalesOrderItem.Product e _SalesOrderItem._Product.Product, resultam em dois JOINs efetivos. Mesmo sem associações, na *query* são feitos Joins de forma implícita.  
+Consequentemente, as duas expressões de caminho, _SalesOrderItem.Product e_SalesOrderItem._Product.Product, resultam em dois JOINs efetivos. Mesmo sem associações, na *query* são feitos Joins de forma implícita.  
 
 ```java
 define view entity Z_ViewWithPathExpressions
@@ -620,6 +622,7 @@ define view entity Z_ViewWithPathExpressions
       _SalesOrderItem._Product._Text
 }
 ```
+
 ```SQL
 CREATE OR REPLACE VIEW "Z_VIEWWITHPATHEXPRESSIONS" AS SELECT
   "ZI_SALESORDERSCHEDULELINE"."MANDT" AS "MANDT",
@@ -646,8 +649,7 @@ Essa consideração é especialmente importante para suas CDS centrais e reutili
 
 Os consumidores podem então navegar seguindo as associações expostas, descobrir toda a rede de modelos conectados e realizar apenas as junções que são realmente necessárias.
 
-
-#### Mudanças na Cardinalidade 
+#### Mudanças na Cardinalidade
 
 As expressões de path podem influenciar o número de registros de dados selecionados e, assim, influenciar a cadinalidade do resultado da seleção, introduzindo junções e filtros.
 
@@ -673,7 +675,6 @@ define view entity Z_ViewWithPathExprsChngngCards
 ```
 
 Na hora do *association* é possível usar do comando **with default filter** para definir a constante "E" para o campo Language.
-
 
 ### Utilização de Associations dentro do Código ABAP
 
@@ -742,7 +743,7 @@ Por exemplo: **@Semantics.quantity.unitOfMeasure**
 - quantity = elemento intermediário
 - unitOfMeasure = elemento folha
 
-Elementos estruturais intermediários podem ramificar, formando uma árvore de nomes de anotação. A tabela a seguir mostra os domínios de maior importância. 
+Elementos estruturais intermediários podem ramificar, formando uma árvore de nomes de anotação. A tabela a seguir mostra os domínios de maior importância.
 
 | Domain           | Description                                                                                      |
 |------------------|--------------------------------------------------------------------------------------------------|
@@ -766,7 +767,7 @@ Elementos estruturais intermediários podem ramificar, formando uma árvore de n
 
 #### Annotation Types and Values
 
-Os tipos de anotações CDS podem representar um valor escalar, uma estrutura ou um array. 
+Os tipos de anotações CDS podem representar um valor escalar, uma estrutura ou um array.
 
 Ao anotar um modelo CDS, a tipagem consistente é reforçada pelas verificações de sintaxe CDS. Valores de anotação só são permitidos se eles correspoderem aos tipos especificados da anotação CDS.
 
@@ -801,10 +802,9 @@ Neste exemplo, a categoria de dados da visão CDS **ZI_ProductText** é definida
 define view entity ZI_ProductText as select ...
 ```
 
-
 #### Valores iniciais de Anotações (Annotation Default Values)
 
-Valores padrão especificados na definição de anotação CDS. Tal valor padrão se aplica se a anotação for usada sem uma avaliação esplícita. 
+Valores padrão especificados na definição de anotação CDS. Tal valor padrão se aplica se a anotação for usada sem uma avaliação esplícita.
 
 #### Escopo de Anotação (Annotation Scopes)
 
@@ -819,9 +819,10 @@ Ela não pode ser usada para anotar parâmetros ou modelos CDS inteiros.
 Anotações como Semantics.systemDate.createdAt e Semantics.quantity.unitOfMeasure, que não são especificamente definidas com seus próprios escopos, herdam suas configurações de escopo de suas anotações pai, Semantics.systemDate e Semantics.quantity, respectivamente.
 
 Definir escopos de anotação requer obter respostas para as seguintes perguntas:
-  - A anotação pode ser usada mais de uma vez ou no máximo uma vez em um modelo CDS?
-  - Será possível usar a anotação em visualizações estendidas do CDS?
-  - A anotação será ou poderá ser propagada por todo o stack de visualização do CDS?
+
+- A anotação pode ser usada mais de uma vez ou no máximo uma vez em um modelo CDS?
+- Será possível usar a anotação em visualizações estendidas do CDS?
+- A anotação será ou poderá ser propagada por todo o stack de visualização do CDS?
 
 ### Efeitos das Annotations
 
@@ -941,8 +942,7 @@ As extensões de metadados do CDS são organizadas em camadas.
 
 Elas se sobrepõem umas às outras de acordo com a camada à qual são atribuídas. A imagem fornece uma visão geral dos relacionamentos de sobreposição entre as camadas.
 
-
-| Layer        | Overlays Layer (Including All Subordinate Layers) |
+| Layer        | Overlays Layer (Including All Subordinate Layers)  |
 |--------------|----------------------------------------------------|
 | CUSTOMER     | PARTNER                                            |
 | PARTNER      | INDUSTRY                                           |
@@ -993,11 +993,11 @@ Um controle de autorização suportado pelo sistema pode ser configurado no nív
 Em particular, o acesso a dados pessoais sensíveis não requer apenas uma proteção funcional do aplicativo, que é chamada de autorização inicial, mas também um controle granular fino, que permite diferenciar o acesso aos registros de dados protegidos individuais (autorização de instância) avaliando os valores que eles contêm.
 
 O exemplo a seguir ilustra as diferenças entre os dois níveis mencionados de controle de autorização:
+
 - Em princípio, os funcionários do departamento de vendas e distribuição devem ser capazes de criar e visualizar pedidos de vendas.
 - Em contraste, os funcionários do departamento de recursos humanos não devem ser capazes de usar as funções correspondentes.
 
 Isso pode ser alcançado não concedendo aos últimos funcionários acesso aos aplicativos do departamento de vendas e distribuição; ou seja, eles não recebem nenhuma autorização de início para eles (chamada da transação, do app, etc).
-
 
 Os controles de acesso CDS são definidos como funções CDS que alavancam a linguagem de controle de dados (DCL).
 
@@ -1007,7 +1007,6 @@ Este diálogo de criação pode ser aberto, por exemplo, indo para a barra de me
 -> Arquivo - Novo - Outro - ABAP Core Data Services - Access Control.
 
 Na primeira etapa do assistente de criação, você pode inserir o nome (Name) do objeto DCLS, sua descrição (Description) e a entidade CDS (Protected Entity), que se refere aos dados que serão protegidos pelo controle de acesso CDS.
-
 
 No exemplo, o nome do DCLS corresponde ao nome da entidade CDS protegida ZI_SalesOrder em letras maiúsculas.
 
@@ -1037,7 +1036,6 @@ As últimas podem ser formuladas correlacionando campos dos modelos CDS com o us
 
 Esses objetos de autorização são os mesmos em que se baseia o conceito de autorização baseado em PFCG de transação.
 
-
 ### Mode of Action of Access Controls
 
 Ao selecionar dados de um modelo CDS usando a interface ABAP SQL, as funções CDS, que são atribuídas aos modelos CDS, são avaliadas automaticamente.
@@ -1052,14 +1050,13 @@ Se essa anotação estiver faltando, espera-se que nenhuma verificação de auto
 
 Isso corresponde a anotar implicitamente o modelo CDS correspondente com **@AccessControl.authorizationCheck:#NOT_REQUIRED**.
 
-| Annotation Value | Description |
-|------------------|-------------|
+| Annotation Value  | Description |
+|-------------------|-------------|
 | **MANDATORY**     | The annotated CDS model will have a CDS access control. If no CDS access control is defined, data selections result in runtime errors. |
 | **CHECK**         | The annotated CDS model will have a CDS access control. In contrast to value MANDATORY, no existence check for the CDS access control is performed at runtime. |
 | **NOT_REQUIRED**  | In general, a CDS access control isn’t required. This value corresponds to the default value, which is specified in the annotation definition. |
 | **NOT_ALLOWED**   | Defining a CDS access control isn’t allowed. Note that this value has no effect on the runtime. It prevents defined CDS access controls from becoming effective. |
 | **PRIVILEGED_ONLY** | A direct data selection from the annotated CDS model is only possible through privileged access, which requires a special addition to the standard ABAP SQL statement. |
-
 
 #### Implementar Access Controls
 
@@ -1094,7 +1091,7 @@ define view entity ZI_SalesOrderItem
 
 Aqui mostramos como está protegendo a função CDS ZI_SalesOrderItem.
 
-Ele acessa o campo SalesOrderType da visualização CDS ZI_SalesOrder por meio da expressão de path _SalesOrder.SalesOrderType em uma condição de acesso.
+Ele acessa o campo SalesOrderType da visualização CDS ZI_SalesOrder por meio da expressão de path_SalesOrder.SalesOrderType em uma condição de acesso.
 
 Como resultado, os registros de dados do item do pedido de vendas são protegidos da mesma forma que o registro de dados correspondente do cabeçalho do pedido de vendas.
 
@@ -1123,6 +1120,7 @@ define view entity ZC_SalesOrder
       SalesOrderType
 }
 ```
+
 ```java
 @MappingRole: true
 define role ZC_SalesOrder
@@ -1152,6 +1150,7 @@ define role ZC_SalesOrder {
 Como uma segunda alternativa, você pode definir as condições de acesso da função DCL ZC_SalesOrder herdando todas as condições de acesso da função DCL ZI_SalesOrder para sua visualização CDS protegida ZI_SalesOrder.
 
 A implementação resultante é:
+
 ```java
 @MappingRole: true
 define role ZC_SalesOrder {
@@ -1169,6 +1168,7 @@ define role ZC_SalesOrder {
     inherit ZI_SalesOrder;
 }
 ```
+
 *Esta opção é considerada obsoleta e não deve mais ser usada.*
 
 #### Implementar Acess Control sem Objetos Auth
@@ -1196,6 +1196,7 @@ Além da entidade CDS protegida e sua função CDS, você tem que definir a enti
 Vamos supor que você tenha uma lista de usuários que são responsáveis por tipos de pedidos de vendas dedicados.
 
 Essa lista se tornará a base para controlar o acesso aos pedidos de vendas.
+
 ```java
 @AccessControl.auditing.specification: '...'
 @AccessControl.auditing.type: #CUSTOM
@@ -1211,6 +1212,7 @@ union select distinct from t000
       abap.char('OAF') as SalesOrderType
 }
 ```
+
 ```java
 define accesspolicy Z_DCLASPECT {
   define aspect Z_DCLASPECT as
@@ -1221,6 +1223,7 @@ define accesspolicy Z_DCLASPECT {
     }
 }
 ```
+
 ```java
 @MappingRole: true
 define role Z_ViewWithDclAspect {
@@ -1249,8 +1252,9 @@ Você não pode alterar as definições de função CDS fornecidas pela SAP para
 No entanto, ao definir uma função CDS adicional, você pode modificar efetivamente o controle de acesso existente de um modelo CDS da SAP.
 
 De uma perspectiva funcional, dois mecanismos são suportados para adaptar uma função CDS por meio de outra função CDS:
- - Substituir os controles de acesso CDS existentes.
- - Combinar a lógica de suas funções CDS com as funções CDS existentes.
+
+- Substituir os controles de acesso CDS existentes.
+- Combinar a lógica de suas funções CDS com as funções CDS existentes.
 
 Apenas os modelo CDS com anotação **@AcessControl.authorizationCheck:#NOT_ALLOWED** representam uma exceção. Essa anotaão impede a aplicação de controles de acesso.
 
@@ -1272,6 +1276,7 @@ Todas as outras restrições de acesso da visualização CDS ZC_SalesOrder são 
 Em vez de substituir a proteção de acesso existente de um modelo CDS, você também pode incorporá-la completamente na sua função CDS redefinida.
 
 Você pode alcançar isso usando a instrução que herda as condições da super.
+
 ```java
 @MappingRole: true
 define role ZC_SalesOrderRedefined {
@@ -1284,25 +1289,25 @@ define role ZC_SalesOrderRedefined {
 
 **combination mode or** e **combination mode and**
 
-
 #### Block Standard Data Selecions from CDS
 
 #### Desacoplando Access Controls do Input do Usuário
 
 #### Map CDS Fields onto Fields of Auth Obj
 
-### Testar Acess Control.
+### Testar Acess Control
 
 Deve-se testar a funcionalidade dos seus controles de acesso CDS no contexto dos serviços qie expõe os modelos CDS protegidos.
 
 Esses testes de integração devem incluir seus aplicativos analíticos e serviços ODATA. Idealmente todas as funções e opções de seleção devem ser cobertas pelos testes.
 
 Transação para testar controle de acesso manual: **SACMSEL**
-  - Permite que você selecione os dados e analise os efeitos.
+
+- Permite que você selecione os dados e analise os efeitos.
 
 ## Serviços de Negócio ( Business Services )
 
-### Projection Views
+### Projection Views -
 
 Para adaptar seus modelos CDS ao cenário de uso desejado, você precisa criar visualizações específicas para o serviço. Essas visualizações podem ser feitas como entidades CDS padrão.
 
@@ -1404,12 +1409,13 @@ As entidades e suas relações (incluindo sua funcionalidade) expostas por um se
 #### Service Binding
 
 Os *service bindings* para serviços:
+
 - OData UI
 - OData Web API
 - InA
 - SQL Web API
 
-| **Binding Type**         | **Protocol**                          | **Description**                             |
+| **Binding Type**         | **Protocol**                           | **Description**                             |
 |--------------------------|----------------------------------------|---------------------------------------------|
 | OData V2 - UI            | OData V2                               | UI service                                  |
 | OData V4 - UI            | OData V4                               | UI service                                  |
@@ -1420,7 +1426,7 @@ Os *service bindings* para serviços:
 
 #### Use ODATA Service URLs
 
-Os Serviços de Negócio podem ser testados de várias maneiras. 
+Os Serviços de Negócio podem ser testados de várias maneiras.
 
 As vinculações de serviço publicadas podem ser invocadas clicando no link exibido no campo URL do serviço.
 
@@ -1472,7 +1478,6 @@ Cenários treinados com dados históricos especifícos do cliente.
 
 Na prática, uma função de tabela CDS seleciona os dados de entrada solicitados, chama o procedimento de previsão com eles e retorna o resultado da previsão combinado com os dados de entrada.
 
-
 ### Melhorar Performance e Evitar Erros nas Functions
 
 Deve-se considerar alguns aspectos adicionais para evitar surpresas prevenir erros e entender o desempenho da função de tabela.
@@ -1501,10 +1506,10 @@ Componentes de infraestrutura do SAP NetWeaver Application Server para ABAP e me
 
 A infraestura, nesse modelo executa muitas tarefas de programação recorrentres e propensas e erros que são genericamente controladas por anotações semânticas motivadas por negócios e motivadas.
 
-
 ### Arquitetura de Aplicação no SAP S/4HANA
 
 As principais tarefas de um aplicativo de negócios são:
+
 - Ler dados;
 - Preparar dados;
 - Apresentar dados;
@@ -1526,6 +1531,7 @@ Para reduzir o esforço de desenvolvimento, a complexidade do programa e o esfor
 Ele usa visualizações CDS que preparam os dados brutos de forma reutilizável e adicionam metadados semânticos. Os metadados são avaliados por componentes de infraestrutura, reduzindo assim o volume de programação individual.
 
 O modelo de programação baseado em CDS do SAP S/4HANA e da SAP Business Technology Platform (SAP BTP), ambiente ABAP, oferece os seguintes benefícios, em comparação com o modelo de programação ABAP clássico:
+
 - Maior velocidade na seleção e preparação de grandes conjuntos de dados para a IU, pois as visualizações do CDS executam essas etapas diretamente no SAP HANA
 - Desenvolvimento simplificado e alta consistência nos serviços OData oferecidos por meio do desenvolvimento orientado a modelos com base em um modelo de dados unificado.
 - Flexibilidade ao usar opcionalmente a lógica ABAP implementada, se necessário
@@ -1539,14 +1545,16 @@ Nomes de campos técnicos em entidades CDS devem ser compreensíveis, mas não e
 Rótulos de campo, no entanto, devem ser traduzidos para muitos idiomas. Eles fornecem informações semânticas importantes.
 
 Poder ser definidos de diversas maneiras:
+
 - Diretamente no UI
 - Derivados de um elemento de dados
 - Tipo simples CDS
-- Por meio de anotação *@EndUserText.label: '<fieldlabel>'*
+- Por meio de anotação *@EndUserText.label: *'fieldlabel'*
 
-### Length of Field Label 
+### Length of Field Label
 
 Para campos em visualizações CDS, no entanto, apenas três variantes de texto estão disponíveis, que correspondem aos rótulos possíveis para propriedades em serviços:
+
 - Um rótulo de campo     *@EndUserText.label*
 - Descrição curta        *@EndUserText.quickInfo*
 - Título de coluna       *@EndUserText.heading*
@@ -1556,9 +1564,10 @@ Seleção de rótulos de campo para elemento de dados é mais complexa. Mapeamen
 Em versões anteriores, o texto médio era sempre escolhido. A lógica foi adaptada no S/4HANA e agora o rótulo é o texto Longo.
 
 Quando 20 caracteres é um comprimento curto para texto, podemos resolver:
+
 - Anotando o campo diretamente na CDS
 - Usando um elemento de dados sem textos Curto e Médio.
-- Usando uma CDS simples 
+- Usando uma CDS simples
 
 ### Quantities and Amounts
 
@@ -1567,9 +1576,9 @@ Identificar campos de quantidade e moeda. Isso permite o processamento automatiz
 Cada campo de valor tem um campo de moeda e cada campo de quantidade tem um campo de unidade.
 
 - Campo de unidade: *@Semantics.unitOfMeasure: true*
-- Campo de quantidade: *@Semantics..quantity.unitOfMeasure: '<campo de unidade>'*
+- Campo de quantidade: *@Semantics..quantity.unitOfMeasure: 'campo de unidade'*
 - Campo de moeda: *@Semantics.currencyCode: true*
-- Campo de valor: *@Semantics.amount.currencyCode: '<campo de moeda>'*
+- Campo de valor: *@Semantics.amount.currencyCode: 'campo de moeda'*
 
 ### Aggregation Behaviour
 
@@ -1580,14 +1589,15 @@ SQL SELECT de entidades CDS pode especificar explicitamente a agregação deseja
 Campos númericos podem ter a agregação executada como soma um cálculo (média, por exemplo). Campos classificáveis podem ter um máximo e um mínimo. Quaisquer campos de valores diferentes podem ser contados como uma agregação.
 
 Duas variantes para especificar agregação padrão:
+
 - Obsoleta: @DefaultAggregation
 - @Aggregation.default
 
-| Tipo de Agregação | Descrição                                                                 |
-|--------------------|---------------------------------------------------------------------------|
+| Tipo de Agregação  | Descrição                                                                  |
+|--------------------|----------------------------------------------------------------------------|
 | #AVG               | Cálculo de média: soma de todos os valores dividida pelo número de valores |
 | #COUNT_DISTINCT    | Número de valores distintos                                                |
-| #FORMULA           | Forma especial para consultas analíticas (veja Capítulo 10, Seção 10.3.4 para mais detalhes) |
+| #FORMULA           | Forma especial para consultas analíticas                                   |
 | #MAX               | Máximo de todos os valores                                                 |
 | #MIN               | Mínimo de todos os valores                                                 |
 | #NONE              | Nenhuma agregação padrão                                                   |
@@ -1603,13 +1613,13 @@ NetAmount,
 ### System Times
 
 | Anotação                                      | Semântica do Campo                                                                                                    |
-|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|-----------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | @Semantics.systemDateTime.createdAt           | Momento da criação (tipo ABAP TIMESTAMP ou TIMESTAMPL)                                                                |
 | @Semantics.systemDateTime.lastChangedAt       | Momento da última modificação (tipo ABAP TIMESTAMP ou TIMESTAMPL)                                                     |
 | @Semantics.systemDate.createdAt               | Data de criação (tipo ABAP DATS)                                                                                      |
 | @Semantics.systemDate.lastChangedAt           | Data da última modificação (tipo ABAP DATS)                                                                           |
 | @Semantics.systemTime.createdAt               | Hora da criação (tipo ABAP TIMS); razoável apenas em combinação com uma data de criação                               |
-| @Semantics.systemTime.lastChangedAt           | Hora da última modificação (tipo ABAP TIMS); razoável apenas em combinação com uma data da última modificação          |
+| @Semantics.systemTime.lastChangedAt           | Hora da última modificação (tipo ABAP TIMS); razoável apenas em combinação com uma data da última modificação         |
 
 ```java
 @Semantics.systemDate.createdAt 
@@ -1622,7 +1632,7 @@ LastChangeDate,
 LastChangeDateTime,  
 ```
 
-### Text And Languages 
+### Text And Languages
 
 Textos em linguagem natural devem ser distinguíveis de código e outras informações técnicas. Para isso, a anotação ***@Semantisc.text*** está disponível.
 
@@ -1652,6 +1662,7 @@ Anotações do CDS também expressam semântica específica. Um exemplo, são as
 | @Semantics.fiscal.dayOfYear             | Número do dia dentro de um ano fiscal                                              |
 
 Isso pode ser observado na CDS standard I_JornalEntryItem (CDS documento fiscal).
+
 ```java
 @Semantics.fiscal.year: true
 I_GLAccountLineItemRawData.LedgerFiscalYear,
@@ -1788,7 +1799,6 @@ Uma associação pode ter simultaneamente os tipos **#TO_COMPOSITION_PARENT** e 
 
 O nó raiz é identificado pela anotação ***@ObjectModel.compositionRoot: true***.
 
-
 ## Virual Data Model
 
 O modelo de dados virtual (VDM) do SAP S/4HANA expõe os dados junto com sua semântica empresarial em um formato compreensível e diretamente utilizável.
@@ -1804,6 +1814,7 @@ Ele é usado por aplicativos transacionais e analíticos, bem como APIs de servi
 A definição de modelos específicos para esses aplicativos ou APIs não é necessária, ou pelo menos é bastante simplificada, reutilizando a VDM.
 
 No entanto, as diretrizes para VDM têm outros alvos:
+
 - Compreensão intuitiva de estruturas de dados de uma perspectiva de negócios, nomes consistentes, homogeneidade do modelo abrangente
 - Evitar redundâncias e desenvolvimentos duplicados.
 
@@ -1816,6 +1827,7 @@ Você se beneficia da VDM orientado a negócios e pode desenvolver rapidamente A
 Ao usar entidades CDS, você deve considerar o ciclo de vida das visualizações e elementos do CDS para se beneficiar da compatibilidade entre versões de software das visualizações CDS lançadas.
 
 O desenvolvimento do VDM coloca os seguintes aspectos em foco:
+
 - As visualizações da VDM são compreensíveis de uma perspectiva comercial não técnica. Elas são aprimoradas com semântica adicional, por exemplo, a relação com outras visualizações do VDM.
 - A maior parte das visualizações da VDM devem ser reutilizadas por outras equipes de desenvolvimento e, após liberá-las, por clientes e parceiros.
 - A VDM implementada pela CDS é o modelo líder para SAP S/4HANA; outros modelos de dados são derivados dele, por exemplo, modelos analíticos ou OData.
@@ -1865,22 +1877,22 @@ Das associações de entidades CDS, até mesmo as relações entre os tipos de n
 
 ### Analytics in SAP S/4Hana
 
-
 ## Modeling Transactional App
-
 
 ## Diretrizes de Nomenclatura de Campos e Associações (CDS/VDM)
 
 ### 1. Regras Gerais e Abreviaturas
-* **Limite de Caracteres:** Nomes de campo no CDS são limitados a **30 caracteres**.
-* **Abreviações:** Devem ser usadas para temas complexos e precisam ser **padronizadas** (ex: `Qty` sempre significa `Quantity`).
+
+**Limite de Caracteres:** Nomes de campo no CDS são limitados a **30 caracteres**.
+
+**Abreviações:** Devem ser usadas para temas complexos e precisam ser **padronizadas** (ex: `Qty` sempre significa `Quantity`).
 
 | Suffix | Description |
 | :--- | :--- |
-| <Name>Text | Language-dependent text |
-| <Name>Cube | Analytical cube view |
-| <Name>Query | Analytical query |
-| <Name>ValueHelp | Value help |
+| NameText | Language-dependent text |
+| NameCube | Analytical cube view |
+| NameQuery | Analytical query |
+| NameValueHelp | Value help |
 
 ### 2. Tipos Específicos de Campos
 
@@ -1895,15 +1907,18 @@ Das associações de entidades CDS, até mesmo as relações entre os tipos de n
 | **Data e Hora** | Use sufixos específicos dependendo da granularidade. | `CreationDateTime`, `CreationDate`, `CreationTime` |
 
 ### 3. Nomenclatura de Parâmetros (VDM)
-* **Formato:** Começa com o prefixo **`P_`** seguido por um nome semântico que segue as regras de nome de campo.
-* **Exemplo:** `P_DisplayCurrency`
+
+**Formato:** Começa com o prefixo **`P_`** seguido por um nome semântico que segue as regras de nome de campo.
+**Exemplo:** `P_DisplayCurrency`
 
 ### 4. Nomenclatura de Associações (VDM)
-* **Regra Geral:** Começa com **`_`**. A primeira letra da visualização de destino é geralmente omitida.
-* **Associação Entidade-Texto:** Geralmente chamada **`_Text`**.
-* **Exemplos:**
-    * `_Customer` (aponta para `I_Customer`)
-    * `_Item` (aponta para `I_SalesOrderItem`)
+
+**Regra Geral:** Começa com **`_`**. A primeira letra da visualização de destino é geralmente omitida.
+**Associação Entidade-Texto:** Geralmente chamada **`_Text`**.
+**Exemplos:**
+
+- `_Customer` (aponta para `I_Customer`)
+- `_Item` (aponta para `I_SalesOrderItem`)
 
 ### 5. Interfaces e Views (CDS)
 
@@ -1925,7 +1940,7 @@ Das associações de entidades CDS, até mesmo as relações entre os tipos de n
 
 ### Evite lógica de negócios em visualizações CDS
 
-Tente usar o CDS Views apenas para modelagem de dados. 
+Tente usar o CDS Views apenas para modelagem de dados.
 
 Se você adicionar algumas condições ou regras relacionadas a negócios, elas provavelmente precisarão de atualizações frequentes, que podem quebrar programas, que usam essas vistas do CDS, e testes de unidade. Mudanças nas Visualizações do CDS também podem influenciar as Visões de CDS superiores de forma implícita.
 
@@ -1939,8 +1954,7 @@ Por exemplo, uma view `I_Material` para a tabela `MARA`.
 
 Use Basic Views em vez de acesso direto a tabelas de banco de dados em Visualização de CDS. Criar a Visualização Básica do CDS quando você criar uma nova tabela de banco de dados e quiser acessar seus dados no CDS.
 
-
-## Atalhos Eclipse 
+## Atalhos Eclipse
 
 - SHIFT + F1 = Pretty Printer
 
