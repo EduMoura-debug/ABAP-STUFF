@@ -9,16 +9,20 @@ Programa: RHMOVE30
 
 SAP ALL para usuário que executa em background (WF-BATCH e/ou SAP_WFRT)
 
-Autorização para SWO_ASYNC
+**Autorização para SWO_ASYNC**
 --> Permite seguir caminho do anexo para visão de um pedido de compra por exemplo.
 
-Transação rmps_set_substitute
+**Transação rmps_set_substitute**
 --> Dar um substituto a um usuário. Todos os conteúdos da SBWP serão passados.
 
 Loop Infinito + SM50 para debugar o método que acontece em background  
 
-Config Tarefas pro MY INBOX:
+**Config Tarefas pro MY INBOX:**
 Plataforma ABAP -> SAP Gateway Service Enablement -> Content -> Workflow Settings -> Atualizar nomes de tarefa e opções de decisão
+
+**Problemas em abrir tarefas de aprovação na SBWP?** Transação -> SWFVISU:
+Se a tarefa estiver configurada como Intent-Based Navigation, ela só abrirá no Fiori.
+    *Para abrir no SAP GUI (se o Workflow Flexível permitir para essa task específica), ela precisaria estar configurada para outro tipo de visualização, o que geralmente não é recomendado para Workflow Flexível, pois pode quebrar a lógica de aprovação simplificada.*
 
 ## Transações
 
