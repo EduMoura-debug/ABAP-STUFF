@@ -43,3 +43,73 @@ Os destinos no contexto do SAP Build são conexões com sistemas back-end defini
 O mercado também oferece uma grande variedade de elementos lógicos e dados.
 
 ## Implementando Produtos - Cenários Ponta a Ponta
+
+
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+Set-ExecutionPolicy RemoteSigned" no powershell
+
+npm i -g @sap/cds-dk
+npm i -g @sap/cds-dk
+
+
+cds init
+
+cds init . --nodejs --force
+
+# schema.cds dentro da pasta db 
+
+namespace geo.field;
+using { cuid, managed } from '@sap/cds/common';
+
+entity Incidents : cuid, managed {
+  title       : String(100);
+  description : String;
+  status      : String enum { open; in_progress; closed; };
+  priority    : Integer;
+  latitude    : Decimal(9,6);
+  longitude   : Decimal(9,6);
+  technician  : Association to Technicians;
+}
+
+entity Technicians : cuid {
+  name  : String(80);
+  email : String;
+}
+
+
+pasta srv arquivo service.cds
+
+using { geo.field as db } from '../db/schema';
+
+service FieldService @(path: '/field') {
+  entity Incidents   as projection on db.Incidents;
+  entity Technicians as projection on db.Technicians;
+}
+
+
+Para a IA: 
+Complete meu schema CDS: adicione uma entidade Categories como code list
+(código e descrição) e associe aos Incidents. Adicione também um campo
+de data de fechamento nos Incidents. 
+Exponha Categories no serviço como readonly.
+
+
+using { geo.field as db } from '../db/schema';
+service FieldService @(path: '/field') {
+  entity Incidents   as projection on db.Incidents;
+  entity Technicians as projection on db.Technicians;
+  @readonly entity Categories as projection on db.Categories;
+}
+
+Leandro Dante
+service FieldService @(path: '/field') {
+  entity Incidents   as projection on db.Incidents;
+  entity Categories as projection on db.Categories @(readonly: true);
+  entity Technicians as projection on db.Technicians;
+}
+
+
+
+Crie arquivos CSV de teste em db/data para todas as entidades do meu schema,
+com 10 incidentes em coordenadas de cidades brasileiras, 5 técnicos com nomes brasileiros e 4 categorias (elétrica, hidráulica, estrutural, telecom).
