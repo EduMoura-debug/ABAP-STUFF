@@ -90,6 +90,8 @@ Clicar na ferramenta de determinação p/tx.fonte clnt para ver Exits/BADIs cham
 
 C14Z_TRANSACTION_CALL
 
+RS_HDSYS_CALL_TC_VARIANT
+
 ## Para aqueles que desejam procurar algum termo ou código de forma rápida
 
 RS_ABAP_SOURCE_SCAN
